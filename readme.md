@@ -1,6 +1,12 @@
 # how to use
 
 1. 최초 클론시
+   `git checkout dev`
+   1-1. 리모트에 기능 브랜치가 없다면
+   `git checkout -b feature/기능브랜치`
+   1-2. 리모트에 기능 브랜치가 있다면
+   `git checkout feature/기능브랜치` 
+
 
    `npm i` 실행
    `.env` 파일 생성
@@ -21,4 +27,6 @@
 
    각각의 키에 해당 하는 값 입력 (단, JWT_SECRET 값은 팀원 모두 같은 값을 적어야 함)
 
-2. dev 브랜치에 변경사항이 있을 때마다 자신의 `feature/~` 브렌치에서 `git pull origin dev`로 브랜치의 버전을 업데이트 
+3. dev 브랜치에 변경사항이 있을 때마다 자신의 `feature/~` 브렌치에서 `git pull origin dev`로 브랜치의 버전을 업데이트 
+
+4. 커밋 컨벤션은 
