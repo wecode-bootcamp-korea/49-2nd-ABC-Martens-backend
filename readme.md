@@ -1,11 +1,11 @@
 # how to use
 
-1. 최초 클론시
-   `git checkout dev`
-   1-1. 리모트에 기능 브랜치가 없다면
-   `git checkout -b feature/기능브랜치`
-   1-2. 리모트에 기능 브랜치가 있다면
-   `git checkout feature/기능브랜치` 
+1. 최초 클론시 </br>
+   `git checkout dev` </br>
+   1-1. 리모트에 기능 브랜치가 없다면 </br>
+   `git checkout -b feature/기능브랜치` </br>
+   1-2. 리모트에 기능 브랜치가 있다면</br>
+   `git checkout feature/기능브랜치` </br>
 
 
    `npm i` 실행
