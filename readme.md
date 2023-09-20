@@ -47,6 +47,10 @@ JWT_SECRET=
 ```yml
 DATABASE_URL="mysql://root:{root 비밀번호 - 설정하지 않았따면 콜론 채로 생략}@127.0.0.1:3306/ABCMartens"
 ```
+로컬 데이터베이스 생성
+```bash
+CREATE DATABASE ABCMartens DEFAULT CHARACTER SET utf8mb4 DEFAULT COLLATE utf8mb4_general_ci
+```
 
 `작업 폴더의 root 위치에서 아래 커맨드를 실행`
 
