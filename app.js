@@ -28,3 +28,105 @@ app.use((err, _, res, next) => {
 app.listen(app.get('port'), () => {
   console.log(`listening.... 🦻http://localhost:${app.get('port')}`);
 });
+
+
+// 회원가입 
+app.post("/users", async (req, res) => {
+  try {
+    const me = req.body;
+    console.log(me);
+
+    const password = me.password;
+    const email = me.email;
+
+    // key error (필수 입력 정보 없을 경우)
+    if ( username === undefined || userid === undefined
+      || password === undefined || birthdate === undefined
+      || email === undefined || phonenumber === undefined
+      || gender === undefined) {
+      const error = new Error("KEY_ERROR");
+      error.statusCode = 400;
+      throw error;
+    }
+
+    // 이메일 중복 확인, 있으면 에러 
+    const existingUser = await myDataSource.query(`
+    SELECT daterbaseId, email FROM users WHERE email='${email}';
+    `);
+
+    console.log("existing user:", existingUser);
+    if (existingUser.length > 0) {
+      const error = new Error("이미 존재하는 사용자입니다"); //보안 위해, 이메일 중복임을 밝히지 않음
+      error.statusCode = 400;
+      throw error;
+    }
+
+
+    // email . @ 필수 포함 정규식 (프론트와 협의)
+    const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+
+    if (!emailRegex.test(email)) {
+      const error = new Error("유효하지 않은 이메일 주소 형식입니다.");
+      error.statusCode = 400;
+      throw error;
+    }
+
+    // 비밀번호 8자리 이상 
+    if (password.length < 8) {
+      const error = new Error("패스워드는 8자리 이상이어야 합니다");
+      error.statusCode = 400;
+      throw error;
+    }
+
+    // 아이디 : 공백 없는 영문/숫자 포함, 6자리 이상 
+    if (userId.length < 6) {
+      const error = new Error("아이디는 6자리 이상이어야 합니다");
+      error.statusCode = 400;
+      throw error;
+    }
+
+    if (!/^[a-zA-Z0-9]+$/.test(userId)) {
+      const error = new Error('아이디는 영문자와 숫자를 포함해야 합니다.');
+      error.statusCode = 400;
+      throw error;
+    }
+
+    if (!userId.trim()) {
+      const error = new Error('사용자 아이디에 공백이 있습니다.');
+      error.statusCode = 400;
+      throw error;
+    }
+
+
+    // DB에 회원정보 저장 
+    const addUser = await myDataSource.query(`
+    INSERT INTO users (
+      userName,userId,                   
+      password, birthDate,
+      email, phoneNumber, gender, 
+      recommender
+      )
+    VALUES (
+      '${userName}',
+      '${userId}',
+      '${password}',
+      '${birthDate}',
+      '${password}',
+      '${email}', 
+      '${phoneNumber}',
+      '${gender}',
+      '${recommender}'
+      )
+    `);
+//선택사항 'recommender'도 기입 시 저장돼야 하니까 여기에 추가?
+
+    return res.status(201).json({
+      message: "회원가입이 완료되었습니다",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(error.statusCode).json({
+      message: "회원가입에 실패하였습니다",
+    });
+  }
+});
