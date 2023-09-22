@@ -117,22 +117,6 @@ app.post('/users', async (req, res) => {
   }
 });
 
-app.use((req, _, next) => {
-  const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
-  error.status = 404;
-  next(error);
-});
-
-app.use((err, _, res, next) => {
-  res.status(err.status || 500);
-  return res.json({
-    error: `${err.status ? err.status : ''} ${err.message}`,
-  });
-});
-
-app.listen(app.get('port'), () => {
-  console.log(`listening.... 🦻http://localhost:${app.get('port')}`);
-});
 
 //로그인
 app.post('/login', async (req, res) => {
@@ -152,7 +136,6 @@ app.post('/login', async (req, res) => {
     const existingUser = await myDataSource.query(`
     SELECT id, email, password FROM users WHERE email='${email}';
     `);
-    console.log('existing user:', existingUser);
 
     if (existingUser.length === 0) {
       const error = new Error('일치하는 회원정보가 없습니다');
@@ -166,11 +149,11 @@ app.post('/login', async (req, res) => {
 
 
     if (!hashPw) {
-      const error = new Error('패스워드가 일치하지 않습니다');
+      const error = new Error('일치하는 회원정보가 없습니다');
       error.statusCode = 400;
       error.code = 'passwordError';
       throw error;
-    }
+    } //보안을 위해 비밀번호, 패스워드 중 오류 알려주지 않기로
 
     // 로그인 성공 시 토큰 발급 
     const token = jwt.sign({ id: existingUser[0].id }, process.env.TYPEORM_JWT);
@@ -181,7 +164,7 @@ app.post('/login', async (req, res) => {
   } catch (error) {
     console.log(error);
   }
-});v 
+});
 
 const server = http.createServer(app);
 const start = async () => {
@@ -192,8 +175,20 @@ const start = async () => {
   }
 };
 
-myDataSource.initialize().then(() => {
-  console.log('Data Source has been initialized!');
+app.use((req, _, next) => {
+  const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
+  error.status = 404;
+  next(error);
 });
 
-start();
+app.use((err, _, res, next) => {
+  res.status(err.status || 500);
+  return res.json({
+    error: `${err.status ? err.status : ''} ${err.message}`,
+  });
+});
+
+app.listen(app.get('port'), () => {
+  console.log(`listening.... 🦻http://localhost:${app.get('port')}`);
+});
+
