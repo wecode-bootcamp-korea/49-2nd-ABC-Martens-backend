@@ -1,0 +1,14 @@
+-- migrate:up
+CREATE TABLE `reviews` (
+  `id` integer PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  `rate` decimal,
+  `user_id` integer NOT NULL,
+  `product_id` integer NOT NULL,
+  `content` text NOT NULL,
+  `created_at` datetime,
+  `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  FOREIGN KEY (`product_id`) REFERENCES `products` (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+-- migrate:down
+DROP TABLE reviews

@@ -51,7 +51,7 @@ app.post("/users", async (req, res) => {
 
     // 이메일 중복 확인, 있으면 에러 
     const existingUser = await myDataSource.query(`
-    SELECT daterbaseId, email FROM users WHERE email='${email}';
+    SELECT id, email FROM users WHERE email='${email}';
     `);
 
     console.log("existing user:", existingUser);
@@ -60,7 +60,7 @@ app.post("/users", async (req, res) => {
       error.statusCode = 400;
       throw error;
     }
-
+    // select *은 최대한 지향하는 게 좋음. 안 쓸 데이터를 다 가져오는 건 낭비
 
     // email . @ 필수 포함 정규식 (프론트와 협의)
     const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
@@ -103,8 +103,7 @@ app.post("/users", async (req, res) => {
     INSERT INTO users (
       userName,userId,                   
       password, birthDate,
-      email, phoneNumber, gender, 
-      recommender
+      email, phoneNumber, gender
       )
     VALUES (
       '${userName}',
@@ -114,11 +113,9 @@ app.post("/users", async (req, res) => {
       '${password}',
       '${email}', 
       '${phoneNumber}',
-      '${gender}',
-      '${recommender}'
+      '${gender}'
       )
     `);
-//선택사항 'recommender'도 기입 시 저장돼야 하니까 여기에 추가?
 
     return res.status(201).json({
       message: "회원가입이 완료되었습니다",
