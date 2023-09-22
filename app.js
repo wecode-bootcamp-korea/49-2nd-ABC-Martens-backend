@@ -55,14 +55,6 @@ app.post('/login', async (req, res) => {
       throw error;
     }
 
-    // 해당 email의 password가 DB에 있는지 (existing user인지)
-    if (password !== existingUser[0].password) {
-      const error = new Error('일치하는 회원 정보가 없습니다');
-      error.statusCode = 400;
-      throw error;
-    }
-    //  보안을 위해 비밀번호, 패스워드 중 오류 알려주지 않기로
-
     // 해당 email의 해쉬된 패스워드가 DB에 있는가
     const hashPw = await bcrypt.compare(password, existingUser[0].password);
     console.log(hashPw);
