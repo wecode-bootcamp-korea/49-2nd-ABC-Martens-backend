@@ -134,6 +134,7 @@ app.listen(app.get('port'), () => {
   console.log(`listening.... 🦻http://localhost:${app.get('port')}`);
 });
 
+
 //로그인
 app.post("/login", async (req, res) => {
   try {
@@ -167,7 +168,23 @@ app.post("/login", async (req, res) => {
       error.statusCode = 400;
       throw error;
     }
-    // 보안을 위해 비밀번호, 패스워드 중 오류 알려주지 않기로
+     보안을 위해 비밀번호, 패스워드 중 오류 알려주지 않기로
+
+    if (password !== existingUser[0].password) {
+    const error = new Error("INVALID_PASSWORD");
+    error.statusCode = 400;
+    throw error;
+    // }
+
+    const hashPw = await bcrypt.compare(password, existingUser[0].password);
+    console.log(hashPw)
+    
+        if (!hashPw) {
+          const error = new Error("passwordError");
+          error.statusCode = 400;
+          error.code = "passwordError";
+          throw error;
+        }
 
     return res.status(200).json({
       message: "로그인 성공하였습니다",
