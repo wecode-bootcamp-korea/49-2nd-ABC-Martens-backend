@@ -4,7 +4,7 @@ CREATE TABLE `product_images` (
   `product_id` integer NOT NULL,
   `detail_image_url` varchar(100),
   `thumbnail_image_url` varchar(100),
-  `isThumbnail` tinyint,
+  `is_thumbnail` tinyint,
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (`product_id`) REFERENCES `products` (`id`)
