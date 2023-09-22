@@ -6,7 +6,7 @@ const router = express.router();
 
 router.get("/productDetails", productController.detail);
 
-
+ㅎ
 module.exports = {
 
     router
