@@ -40,10 +40,8 @@ app.post("/users", async (req, res) => {
     const email = me.email;
 
     // key error (필수 입력 정보 없을 경우)
-    if ( username === undefined || userid === undefined
-      || password === undefined || birthdate === undefined
-      || email === undefined || phonenumber === undefined
-      || gender === undefined) {
+    if ( ! nickname || ! password|| ! birthDate || ! email || ! phoneNumber
+        || ! gender ) {
       const error = new Error("KEY_ERROR");
       error.statusCode = 400;
       throw error;
@@ -60,9 +58,8 @@ app.post("/users", async (req, res) => {
       error.statusCode = 400;
       throw error;
     }
-    // select *은 최대한 지향하는 게 좋음. 안 쓸 데이터를 다 가져오는 건 낭비
 
-    // email . @ 필수 포함 정규식 (프론트와 협의)
+    // email . @ 필수 포함 정규식 
     const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 
     if (!emailRegex.test(email)) {
@@ -101,19 +98,20 @@ app.post("/users", async (req, res) => {
     // DB에 회원정보 저장 
     const addUser = await myDataSource.query(`
     INSERT INTO users (
-      userName,userId,                   
+      nickName, isCheckedMarketing                   
       password, birthDate,
-      email, phoneNumber, gender
+      email, phoneNumber, gender, profileImage, provider
       )
     VALUES (
-      '${userName}',
-      '${userId}',
+      '${nickName}',
+      '${isCheckedMarketing}',
       '${password}',
       '${birthDate}',
-      '${password}',
       '${email}', 
       '${phoneNumber}',
-      '${gender}'
+      '${gender}',
+      '${profileImage}',
+      '${provider}'
       )
     `);
 
