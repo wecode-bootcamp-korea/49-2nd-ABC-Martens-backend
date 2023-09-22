@@ -12,23 +12,6 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use((req, _, next) => {
-  const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
-  error.status = 404;
-  next(error);
-});
-
-app.use((err, _, res, next) => {
-  res.status(err.status || 500);
-  return res.json({
-    error: `${err.status ? err.status : ''} ${err.message}`,
-  });
-});
-
-app.listen(app.get('port'), () => {
-  console.log(`listening.... 🦻http://localhost:${app.get('port')}`);
-});
-
 
 // 회원가입 
 app.post("/users", async (req, res) => {
@@ -75,24 +58,9 @@ app.post("/users", async (req, res) => {
       throw error;
     }
 
-    // 아이디 : 공백 없는 영문/숫자 포함, 6자리 이상 
-    if (userId.length < 6) {
-      const error = new Error("아이디는 6자리 이상이어야 합니다");
-      error.statusCode = 400;
-      throw error;
-    }
-
-    if (!/^[a-zA-Z0-9]+$/.test(userId)) {
-      const error = new Error('아이디는 영문자와 숫자를 포함해야 합니다.');
-      error.statusCode = 400;
-      throw error;
-    }
-
-    if (!userId.trim()) {
-      const error = new Error('사용자 아이디에 공백이 있습니다.');
-      error.statusCode = 400;
-      throw error;
-    }
+    // DB 저장 전 비밀번호 해시화 
+    const saltRounds = 10;
+    const hashedPw = await bcrypt.hash(password, saltRounds);
 
 
     // DB에 회원정보 저장 
@@ -124,4 +92,23 @@ app.post("/users", async (req, res) => {
       message: "회원가입에 실패하였습니다",
     });
   }
+});
+
+
+
+app.use((req, _, next) => {
+  const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
+  error.status = 404;
+  next(error);
+});
+
+app.use((err, _, res, next) => {
+  res.status(err.status || 500);
+  return res.json({
+    error: `${err.status ? err.status : ''} ${err.message}`,
+  });
+});
+
+app.listen(app.get('port'), () => {
+  console.log(`listening.... 🦻http://localhost:${app.get('port')}`);
 });
