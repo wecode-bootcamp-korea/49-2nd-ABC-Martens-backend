@@ -18,6 +18,7 @@ app.use((req, _, next) => {
   next(error);
 });
 
+
 app.use((err, _, res, next) => {
   res.status(err.status || 500);
   return res.json({
