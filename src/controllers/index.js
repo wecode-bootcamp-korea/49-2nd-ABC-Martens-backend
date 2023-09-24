@@ -1,5 +1,13 @@
-const { socialLoginController } = require('./userController');
+const {
+  socialLoginController,
+  getVerificationCodeController,
+  setNewPasswordController,
+} = require('./userController');
 
 module.exports = {
-  userController: { socialLoginController },
+  userController: {
+    socialLoginController,
+    getVerificationCodeController,
+    setNewPasswordController,
+  },
 };
