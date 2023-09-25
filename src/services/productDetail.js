@@ -31,6 +31,16 @@ const productReader = async(id) => {
     )
 }
 
+const productDeleter = async(id) => {
+
+    const productDelete = await productDetailDao.productDeleter(id);
+    const optionDelete = await productDetailDao.optionDeleter(id);
+    const imageDelete = await productDetailDao.imageDeleter(id);
+
+    return res.status(200).json("PRODUCT_DELETED_SUCCESSFULLY");
+
+}
+
 
 
 

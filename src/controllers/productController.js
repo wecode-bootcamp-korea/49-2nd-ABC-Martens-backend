@@ -8,10 +8,50 @@ const detail = async (req, res) => {
     console.log("CONTROLLER: PASSED TO SERVICE SUCCESSFULLY")
 }
 
+const create = async (req, res) => {
+    
+    const productRequestForCreation = req.body;
+    const { product_name, price, original_price, products_description }  = productRequestForCreation;
+
+        if (!product_name) {
+        return res.status(400).json("KEY_ERROR")
+        }
+
+        if (!price) {
+        return res.status(400).json("KEY_ERROR")
+        }
+
+        if (!original_price) {
+        return res.status(400).json("KEY_ERROR")
+        }
+
+    const detailProductCreator = await productCreator.productCreater({productRequestForCreation});
+    console.log("CONTROLLER: PASSED TO SERVICE SUCCESSFULLY")
+}
+
+// const update = async (req, res) => {
+//     const producRequest = req.body;
+//     const id  = productRequest;
+
+//     const detailProductReader = await productDetail.productReader(id);
+//     console.log("CONTROLLER: PASSED TO SERVICE SUCCESSFULLY")
+// }
+
+const deleter = async (req, res) => {
+    const producRequestForDeletion = req.body;
+    const id  = producRequestForDeletion.id;
+    const product_id = id;
+
+    const detailProductDeleter = await productDetail.productDeleter(id);
+    console.log("CONTROLLER: PASSED TO SERVICE SUCCESSFULLY")
+}
 
 module.exports = {
 
-    detail
+    detail,
+    create,
+    update,
+    deleter
 
 }
 
