@@ -1,49 +1,56 @@
 const { dataSource } = require('./dataSource');
 const express = require('express');
-  const app = express();
-  app.use(express.json()); 
+const app = express();
+app.use(express.json());
 
 const selector = async (id) => {
-  await dataSource.query(
-    `SELECT ( id ) FROM products WHERE id = ${id}`,
+  const selectorViewer = await dataSource.query(
+    `SELECT id  FROM products WHERE id = ${id}`,
   );
   console.log('PRODUCT_SELECTED_SUCCESSFULLY');
+  return JSON.parse(JSON.stringify(selectorViewer));
 };
 
 const introducer = async (id) => {
-  await dataSource.query(
-    `SELECT ( id, product_name, price, original_price ) FROM products WHERE id = ${id}`,
+  const introducerViewer = await dataSource.query(
+    `SELECT product_name, price, original_price FROM products WHERE id = ${id}`,
   );
   console.log('DAO: PRODUCT_READ_SUCCESSFULLY');
+  return JSON.parse(JSON.stringify(introducerViewer));
 };
 
 const imageLoader = async (id) => {
-  await dataSource.query(
-    `SELECT ( detail_image_url, thumbnail_image_url ) FROM product_images WHERE product_id = ${id}`,
+  const imageViewer = await dataSource.query(
+    `SELECT detail_image_url, thumbnail_image_url thumbnail_image_url, is_thumbnail FROM product_images WHERE product_id = ${id}`,
   );
+  // return res.status(200).json(imageViewer);
   console.log('DAO: IMAGE_READ_SUCCESSFULLY');
+  return JSON.parse(JSON.stringify(imageViewer));
 };
 
 const option = async (id) => {
-  await dataSource.query(
-    `SELECT ( quanity, size, color_id ) FROM options WHERE product_id = ${id}`,
+  const optionViewer = await dataSource.query(
+    `SELECT color_id, quantity, size FROM options WHERE product_id = ${id}`,
   );
   console.log('DAO: OPTION_READ_SUCCESSFULLY');
+  return JSON.parse(JSON.stringify(optionViewer));
 };
 
 const colorLoader = async (id) => {
   const color_id = optionSelector.color_id; //색상만을 불러옵니다.
   const colorViewer = await dataSource.query(
-    `SELECT ( color ) FROM colors WHERE color_id = ${color_id}`,
+    `SELECT color FROM colors WHERE color_id = ${color_id}`,
   );
   console.log('DAO: COLOR_READ_SUCCESSFULLY');
+  return JSON.parse(JSON.stringify(colorViewer));
 };
 
 const price = async (id) => {
-  await dataSource.query(
-    `SELECT ( price, original_price ) FROM products WHERE product_id = ${id}`,
+  const priceViewer = await dataSource.query(
+    `SELECT price, original_price FROM products WHERE id = ${id}`,
   );
   console.log('DAO: PRICE_READ_SUCCESSFULLY');
+  return JSON.parse(JSON.stringify(priceViewer));
 };
 
 const productDeleter = async (id) => {
@@ -71,5 +78,5 @@ module.exports = {
 
   imageDeleter,
   productDeleter,
-  optionDeleter
+  optionDeleter,
 };

@@ -6,9 +6,10 @@ app.use(express.json());
 
 const detail = async (req, res) => {
   const { id } = req.params;
-  const productReader = await productService.productReader(Number(id));
   console.log('CONTROLLER: PASSED TO SERVICE SUCCESSFULLY');
-  return res.status(200).json('HELLO FROM CONTROLLER');
+  const productReader = await productService.productReader(Number(id), res);
+  
+  return res.status(200).json(productReader);
 };
 
 const create = async (req, res) => {
@@ -36,7 +37,7 @@ const create = async (req, res) => {
 
 module.exports = {
   detail,
-  create,
+  create
 };
 
 // const update = async (req, res) => {
