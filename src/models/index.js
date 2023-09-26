@@ -1,7 +1,6 @@
 const { dataSource } = require('./dataSource');
 const { getUserIdByEmailDao, createUserDao } = require('./userDao');
-
-const productDetailDao = require('./productDao');
+const productDao = require('./productDao');
   const selector = productDao.selector;
   const introducer = productDao.introducer;
   const price = productDao.price;

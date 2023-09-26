@@ -1,8 +1,8 @@
 const { socialLoginController } = require('./userController');
-const productController = require('./productController');
+const { productController } = require('./productController');
 
 
 module.exports = {
   userController: { socialLoginController },
-  productController: {productController},
+  productController: { productController }
 };
