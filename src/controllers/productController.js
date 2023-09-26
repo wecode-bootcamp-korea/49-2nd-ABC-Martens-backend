@@ -2,7 +2,6 @@ const { generateToken, throwError } = require('../utils');
 const productService = require("../services/productService");
 
 const detail = async (req, res) => {
-    console.log("gotcha!")
     const productRequest = req.body;
     const id  = productRequest.id;
     const productReader = await productService.productReader(id);

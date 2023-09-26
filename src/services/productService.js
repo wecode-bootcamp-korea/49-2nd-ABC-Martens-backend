@@ -37,7 +37,7 @@ const productDeleter = async (id) => {
 
 module.exports = {
   productReader,
-  productDeleter,
+  productDeleter
 };
 
 // const productDetailDao = require("../models/productDetailDao");
