@@ -12,15 +12,10 @@ const productDao = require('../models/productDao');
 const productReader = async (id) => {
 
   const productSelector = await productDao.selector(id);
-  console.log(productSelector);
   const productIntroducer = await productDao.introducer(id);
-  console.log(productIntroducer);
   const imageSelector = await productDao.imageLoader(id);
-  console.log(imageSelector);
   const optionSelector = await productDao.option(id);
-  console.log(optionSelector);
   const priceSelector = await productDao.price(id);
-  console.log(priceSelector);
 
   console.log('SERVICE: PARSED TO DAO SUCCESSFULLY');
 
