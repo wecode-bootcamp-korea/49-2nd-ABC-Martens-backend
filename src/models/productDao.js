@@ -7,7 +7,7 @@ const selector = async (id) => {
   const selectorViewer = await dataSource.query(
     `SELECT id  FROM products WHERE id = ${id}`,
   );
-  console.log('PRODUCT_SELECTED_SUCCESSFULLY');
+  console.log('DAO: PRODUCT_SELECTED_SUCCESSFULLY');
   return JSON.parse(JSON.stringify(selectorViewer));
 };
 
@@ -56,16 +56,19 @@ const price = async (id) => {
 const productDeleter = async (id) => {
   await req.dataSource.query(`DELETE * FROM products WHERE id = ${id}`);
   console.log('DAO: PRODUCT_DELETED_SUCCESSFULLY');
+  return JSON.parse("DAO: PRODUCT DELETED")
 };
 
 const optionDeleter = async (id) => {
   await req.dataSource.query(`DELETE * FROM options WHERE id = ${id}`);
   console.log('DAO: PRODUCT_OPTION_DELETED_SUCCESSFULLY');
+  return JSON.parse("DAO: OPTION DELETED")
 };
 
 const imageDeleter = async (id) => {
   await req.dataSource.query(`DELETE * FROM product_images WHERE id = ${id}`);
   console.log('DAO: PRODUCT_IMAGES_DELETED_SUCCESSFULLY');
+  return JSON.parse("DAO: IMAGE DELETED")
 };
 
 module.exports = {
