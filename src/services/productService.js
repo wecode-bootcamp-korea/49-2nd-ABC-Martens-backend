@@ -1,3 +1,7 @@
+const express = require('express');
+  const app = express();
+  app.use(express.json()); 
+
 const productDao = require('../models/productDao');
   const selector = productDao.selector;
   const introducer = productDao.introducer;
@@ -14,7 +18,6 @@ const productReader = async (id) => {
   const priceSelector = await productDao.price(id);
 
   console.log('SERVICE: PARSED TO DAO SUCCESSFULLY');
-
   console.log('SERVICE: RECEIVED THE INFO FROM DAO SUCCESSFULLY');
 
   return res

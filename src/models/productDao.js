@@ -1,4 +1,7 @@
 const { dataSource } = require('./dataSource');
+const express = require('express');
+  const app = express();
+  app.use(express.json()); 
 
 const selector = async (id) => {
   await dataSource.query(
@@ -9,7 +12,7 @@ const selector = async (id) => {
 
 const introducer = async (id) => {
   await dataSource.query(
-    `SELECT ( product_id, product_name, price, original_price ) FROM products WHERE product_id = ${id}`,
+    `SELECT ( id, product_name, price, original_price ) FROM products WHERE id = ${id}`,
   );
   console.log('DAO: PRODUCT_READ_SUCCESSFULLY');
 };
