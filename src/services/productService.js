@@ -1,15 +1,11 @@
-const productDetailDao = require('../models/productDao');
-
-const selector = productDetailDao.selector;
-const introducer = productDetailDao.introducer;
-const imageLoader = productDetailDao.imageLoader;
-const option = productDetailDao.option;
-const price = productDetailDao.price;
+const productDao = require('../models/productDao');
+  const selector = productDao.selector;
+  const introducer = productDao.introducer;
+  const imageLoader = productDao.imageLoader;
+  const option = productDao.option;
+  const price = productDao.price;
 
 const productReader = async (id) => {
-  // const productRequest = req.body;
-  // const id = productRequest.id;
-  // const {id} = productRequest;
 
   const productSelector = await productDao.selector(id);
   const productIntroducer = await productDao.introducer(id);
@@ -19,13 +15,6 @@ const productReader = async (id) => {
 
   console.log('SERVICE: PARSED TO DAO SUCCESSFULLY');
 
-  // await productDetailDao.readDetail({
-  //     productIntroducer,
-  //     imageSelector,
-  //     optionSelector,
-  //     colorViewer,
-  //     priceSelector
-  // });
   console.log('SERVICE: RECEIVED THE INFO FROM DAO SUCCESSFULLY');
 
   return res

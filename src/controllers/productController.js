@@ -3,7 +3,7 @@ const productService = require("../services/productService");
 
 const detail = async (req, res) => {
     console.log("gotcha!")
-    const producRequest = req.body;
+    const productRequest = req.body;
     const id  = productRequest.id;
     const productReader = await productService.productReader(id);
     console.log("CONTROLLER: PASSED TO SERVICE SUCCESSFULLY")
@@ -31,6 +31,19 @@ const create = async (req, res) => {
     console.log("CONTROLLER: PASSED TO SERVICE SUCCESSFULLY")
 }
 
+
+
+module.exports = {
+
+    detail,
+    create
+
+}
+
+
+
+
+
 // const update = async (req, res) => {
 //     const producRequest = req.body;
 //     const id  = productRequest;
@@ -47,19 +60,6 @@ const create = async (req, res) => {
 //     const detailProductDeleter = await productDetail.productDeleter(id);
 //     console.log("CONTROLLER: PASSED TO SERVICE SUCCESSFULLY")
 // }
-
-module.exports = {
-
-    detail,
-    create
-
-}
-
-
-
-
-
-
 
 
 
