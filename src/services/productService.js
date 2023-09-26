@@ -1,4 +1,4 @@
-const productDetailDao = require("../models/productDetailDao");
+const productDetailDao = require('../models/productDao');
 
 const selector = productDetailDao.selector;
 const introducer = productDetailDao.introducer;
@@ -7,73 +7,54 @@ const option = productDetailDao.option;
 const price = productDetailDao.price;
 
 const productReader = async (id) => {
-    
-    // const productRequest = req.body;
-    // const id = productRequest.id;
-    // const {id} = productRequest;
+  // const productRequest = req.body;
+  // const id = productRequest.id;
+  // const {id} = productRequest;
 
-    const productSelector = await productDetailDao.selector(id);
-    const productIntroducer = await productDetailDao.introducer(id);
-    const imageSelector = await productDetailDao.imageLoader(id);
-    const optionSelector = await productDetailDao.option(id);
-    const priceSelector = await productDetailDao.price(id);
-    
-    console.log("SERVICE: PARSED TO DAO SUCCESSFULLY")
- 
-    // await productDetailDao.readDetail({
-    //     productIntroducer,
-    //     imageSelector,
-    //     optionSelector,
-    //     colorViewer,
-    //     priceSelector
-    // });
-    console.log("SERVICE: RECEIVED THE INFO FROM DAO SUCCESSFULLY")
-    
-    return res.status(200).json( 
-        { "productId": productSelector },
-        { "productInfo": productIntroducer },
-        { "productOption": optionSelector },
-        { "message": "PRODUCT READ"}
-    )
-}
+  const productSelector = await productDao.selector(id);
+  const productIntroducer = await productDao.introducer(id);
+  const imageSelector = await productDao.imageLoader(id);
+  const optionSelector = await productDao.option(id);
+  const priceSelector = await productDao.price(id);
 
-const productDeleter = async(id) => {
+  console.log('SERVICE: PARSED TO DAO SUCCESSFULLY');
 
-    const productDelete = await productDetailDao.productDeleter(id);
-    const optionDelete = await productDetailDao.optionDeleter(id);
-    const imageDelete = await productDetailDao.imageDeleter(id);
+  // await productDetailDao.readDetail({
+  //     productIntroducer,
+  //     imageSelector,
+  //     optionSelector,
+  //     colorViewer,
+  //     priceSelector
+  // });
+  console.log('SERVICE: RECEIVED THE INFO FROM DAO SUCCESSFULLY');
 
-    return res.status(200).json("PRODUCT_DELETED_SUCCESSFULLY");
+  return res
+    .status(200)
+    .json(
+      { productId: productSelector },
+      { productInfo: productIntroducer },
+      { productOption: optionSelector },
+      { message: 'PRODUCT READ' },
+    );
+};
 
-}
+const productDeleter = async (id) => {
+  const productDelete = await productDao.productDeleter(id);
+  const optionDelete = await productDao.optionDeleter(id);
+  const imageDelete = await productDao.imageDeleter(id);
+
+  return res.status(200).json('PRODUCT_DELETED_SUCCESSFULLY');
+};
 
 module.exports = {
-
-    productReader,
-    productDeleter
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  productReader,
+  productDeleter,
+};
 
 // const productDetailDao = require("../models/productDetailDao");
 
 // const productReader = async(id) => {
-    
+
 //     const productRequest = req.body;
 //     const id = productRequest.id;
 //     // const {id} = productRequest;
@@ -83,7 +64,7 @@ module.exports = {
 //     const imageSelector = await productDetailDao.imageLoader;
 //     const optionSelector = await productDetailDao.option;
 //     const priceSelector = await productDetailDao.price;
-    
+
 //     const productSelector = await req.dataSource.query(`SELECT ( product_id ) FROM products WHERE product_id = ${id}`);
 //         console.log("PRODUCT_SELECTED_SUCCESSFULLY")
 //     const productIntroducer = await req.dataSource.query( `SELECT ( product_id, product_name, price, original_price ) FROM products WHERE product_id = ${id}`);
@@ -106,18 +87,13 @@ module.exports = {
 //         priceSelector
 //     });
 
-//     return res.status(200).json( 
+//     return res.status(200).json(
 //         { "productId": productSelector },
 //         { "productInfo": productIntroducer },
 //         { "productOption": optionSelector },
 //         { "message": "PRODUCT READ"}
 //     )
 // }
-
-
-
-
-
 
 // const Pusher = async(req, res) => {
 //     const pusherInformation = req.body;
@@ -132,10 +108,9 @@ module.exports = {
 //     `SELECT ( product_id, product_name, price, original_price ) FROM products WHERE product_id = ${id}` // product introducer
 //     `SELECT ( detail_image_url, thumbnail_image_url ) FROM product_images WHERE product_id = ${id}` //image selector
 //     `SELECT ( quanity, size, color_id ) FROM options WHERE product_id = ${id}` //option selector
-//     `SELECT ( price, original_price ) FROM products WHERE product_id = ${id}` 
+//     `SELECT ( price, original_price ) FROM products WHERE product_id = ${id}`
 
 // }
-
 
 // const Updater = async(req, res) => {
 //     const updateInformation = req.body;
@@ -150,21 +125,13 @@ module.exports = {
 //     `SELECT ( product_id, product_name, price, original_price ) FROM products WHERE product_id = ${id}` // product introducer
 //     `SELECT ( detail_image_url, thumbnail_image_url ) FROM product_images WHERE product_id = ${id}` //image selector
 //     `SELECT ( quanity, size, color_id ) FROM options WHERE product_id = ${id}` //option selector
-//     `SELECT ( price, original_price ) FROM products WHERE product_id = ${id}` 
-
+//     `SELECT ( price, original_price ) FROM products WHERE product_id = ${id}`
 
 // }
-
 
 // const Remover = async(req, res) => {
 
-
-
 // }
-
-
-
-
 
 // // const readerProducts = app.post("/readerProducts", acync(req, res) => {
 // //     try {

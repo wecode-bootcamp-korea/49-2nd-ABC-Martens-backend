@@ -1,8 +1,8 @@
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
-const productDetailDao = require("./src/models/productDetailDao");
-const productController = require("./src/controllers/productController")
+const productDetailDao = require('./src/models/productDao');
+const productController = require('./src/controllers/productController');
 // const productDetailServices = require("./src/controllers/productController")
 
 require('dotenv').config();

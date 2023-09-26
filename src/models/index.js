@@ -1,12 +1,13 @@
 const { dataSource } = require('./dataSource');
 const { getUserIdByEmailDao, createUserDao } = require('./userDao');
-const productDetailDao = require('./productDetailDao');
-const selector = productDetailDao.selector;
-const introducer =  productDetailDao.introducer;
-const price = productDetailDao.price;
-const colorLoader = productDetailDao.colorLoader;
-const option = productDetailDao.option;
-const imageLoader = productDetailDao.imageLoader;
+
+const productDetailDao = require('./productDao');
+  const selector = productDao.selector;
+  const introducer = productDao.introducer;
+  const price = productDao.price;
+  const colorLoader = productDao.colorLoader;
+  const option = productDao.option;
+  const imageLoader = productDao.imageLoader;
 
 module.exports = {
   dataSource,
@@ -15,12 +16,12 @@ module.exports = {
     createUserDao,
   },
 
-  productDetailDao: {
+  productDao: {
     selector,
     introducer,
     price,
     colorLoader,
     option,
-    imageLoader
+    imageLoader,
   }
 };

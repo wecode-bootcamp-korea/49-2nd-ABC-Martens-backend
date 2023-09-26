@@ -1,12 +1,12 @@
 const { generateToken, throwError } = require('../utils');
-const productDetail = require("../services/productDetail");
+const productDetail = require("../services/productService");
 
 const detail = async (req, res) => {
     console.log("gotcha!")
     const producRequest = req.body;
     const id  = productRequest.id;
 
-    const productReader = await productDetail.productReader(id);
+    const productReader = await productService.productReader(id);
     console.log("CONTROLLER: PASSED TO SERVICE SUCCESSFULLY")
     return res.status(200).json("HELLO FROM CONTROLLER");
 }
