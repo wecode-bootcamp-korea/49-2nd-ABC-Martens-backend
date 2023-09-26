@@ -1,4 +1,4 @@
-const dataSource = require('./dataSource');
+const { dataSource } = require('./dataSource');
 
 const selector = async (id) => {
   await req.dataSource.query(
@@ -59,13 +59,14 @@ const imageDeleter = async (id) => {
 };
 
 module.exports = {
+  selector,
+  introducer,
   price,
   colorLoader,
   option,
   imageLoader,
-  introducer,
 
   imageDeleter,
   productDeleter,
-  optionDeleter,
+  optionDeleter
 };

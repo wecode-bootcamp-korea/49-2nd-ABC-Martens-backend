@@ -1,6 +1,12 @@
 const productDetailDao = require("../models/productDetailDao");
 
-const productReader = async(id) => {
+const selector = productDetailDao.selector;
+const introducer = productDetailDao.introducer;
+const imageLoader = productDetailDao.imageLoader;
+const option = productDetailDao.option;
+const price = productDetailDao.price;
+
+const productReader = async (id) => {
     
     // const productRequest = req.body;
     // const id = productRequest.id;
@@ -38,6 +44,13 @@ const productDeleter = async(id) => {
     const imageDelete = await productDetailDao.imageDeleter(id);
 
     return res.status(200).json("PRODUCT_DELETED_SUCCESSFULLY");
+
+}
+
+module.exports = {
+
+    productReader,
+    productDeleter
 
 }
 

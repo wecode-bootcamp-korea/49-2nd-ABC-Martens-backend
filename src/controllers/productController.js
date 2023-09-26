@@ -1,11 +1,14 @@
+const { generateToken, throwError } = require('../utils');
 const productDetail = require("../services/productDetail");
 
 const detail = async (req, res) => {
+    console.log("gotcha!")
     const producRequest = req.body;
     const id  = productRequest.id;
 
-    const detailProductReader = await productDetail.productReader(id);
+    const productReader = await productDetail.productReader(id);
     console.log("CONTROLLER: PASSED TO SERVICE SUCCESSFULLY")
+    return res.status(200).json("HELLO FROM CONTROLLER");
 }
 
 const create = async (req, res) => {
@@ -37,21 +40,19 @@ const create = async (req, res) => {
 //     console.log("CONTROLLER: PASSED TO SERVICE SUCCESSFULLY")
 // }
 
-const deleter = async (req, res) => {
-    const producRequestForDeletion = req.body;
-    const id  = producRequestForDeletion.id;
-    const product_id = id;
+// const deleter = async (req, res) => {
+//     const producRequestForDeletion = req.body;
+//     const id  = producRequestForDeletion.id;
+//     const product_id = id;
 
-    const detailProductDeleter = await productDetail.productDeleter(id);
-    console.log("CONTROLLER: PASSED TO SERVICE SUCCESSFULLY")
-}
+//     const detailProductDeleter = await productDetail.productDeleter(id);
+//     console.log("CONTROLLER: PASSED TO SERVICE SUCCESSFULLY")
+// }
 
 module.exports = {
 
     detail,
-    create,
-    update,
-    deleter
+    create
 
 }
 

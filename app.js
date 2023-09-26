@@ -1,6 +1,9 @@
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
+const productDetailDao = require("./src/models/productDetailDao");
+const productController = require("./src/controllers/productController")
+// const productDetailServices = require("./src/controllers/productController")
 
 require('dotenv').config();
 
@@ -19,7 +22,6 @@ app.use((req, _, next) => {
   error.status = 404;
   next(error);
 });
-
 
 app.use((err, _, res, next) => {
   res.status(err.status || 500);
