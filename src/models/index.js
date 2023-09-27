@@ -1,10 +1,12 @@
-const { dataSource } = require('./dataSource');
 const { getUserIdByEmailDao, createUserDao } = require('./userDao');
+const { getProductByUserIdDao } = require('./cartDao');
 
 module.exports = {
-  dataSource,
   userDao: {
     getUserIdByEmailDao,
     createUserDao,
+  },
+  cartDao: {
+    getProductByUserIdDao,
   },
 };
