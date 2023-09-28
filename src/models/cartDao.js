@@ -13,10 +13,13 @@ const getProductByUserIdDao = async (id) => {
         ELSE ROUND((products.original_price - price) / products.original_price * 100) 
        END) AS salePercentage,
       products.price AS price,
+      product_images.thumbnail_image_url AS productThumbnail,
       options.size,
       product_carts.quantity
     FROM 
       products
+    LEFT JOIN
+        product_images ON products.id = product_images.product_id
     LEFT JOIN 
       options ON products.id = options.product_id
     LEFT JOIN 
@@ -31,7 +34,7 @@ const getProductByUserIdDao = async (id) => {
 
 /**
  * productCartsTransaction - 장바구니에 상품 추가/수정시 발생하는 트랜잭션 함수
- * @param {object[]} items - {id: number, productList: [{id: number, productId: number, color: string, quantity: number, size: number}]}
+ * @param {object[]} data - {id: number, productList: [{id: number, productId: number, color: string, quantity: number, size: number}]}
  * @returns string
  */
 const productCartsTransaction = async (data) => {
