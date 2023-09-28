@@ -1,9 +1,13 @@
 const { socialLoginController } = require('./userController');
-const { getCartProductByUserIdController } = require('./cartController');
+const {
+  getCartProductByUserIdController,
+  addProductCartsController,
+} = require('./cartController');
 
 module.exports = {
   userController: { socialLoginController },
   cartController: {
     getCartProductByUserIdController,
+    addProductCartsController,
   },
 };

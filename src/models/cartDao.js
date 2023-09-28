@@ -1,3 +1,4 @@
+const { throwError } = require('../utils');
 const { dataSource } = require('./dataSource');
 
 const getProductByUserIdDao = async (id) => {
@@ -28,6 +29,63 @@ const getProductByUserIdDao = async (id) => {
   return result;
 };
 
+/**
+ * productCartsTransaction - 장바구니에 상품 추가/수정시 발생하는 트랜잭션 함수
+ * @param {object[]} items - {id: number, productList: [{id: number, productId: number, color: string, quantity: number, size: number}]}
+ * @returns string
+ */
+const productCartsTransaction = async (data) => {
+  const { id, productList } = data;
+
+  const queryRunner = dataSource.createQueryRunner();
+  await queryRunner.connect();
+  await queryRunner.startTransaction();
+
+  try {
+    const colors = productList.map((item) => item.color);
+    const sizes = productList.map((item) => item.size);
+    const productIds = productList.map((item) => item.productId);
+
+    const colorIdsResult = await queryRunner.query(
+      `SELECT id, color FROM colors WHERE color IN (?)`,
+      [colors],
+    );
+    const optionIdsResult = await queryRunner.query(
+      `SELECT id, product_id, color_id, size  FROM options WHERE product_id IN (?) AND color_id IN (?) AND size IN (?)`,
+      [productIds, colorIdsResult.map((color) => color.id), sizes],
+    );
+    const values = productList
+      .map((item) => {
+        const colorId = colorIdsResult.find((c) => c.color === item.color).id;
+        const optionId = optionIdsResult.find(
+          (o) =>
+            o.product_id === item.productId &&
+            o.color_id === colorId &&
+            o.size === parseInt(item.size),
+        ).id;
+        return `(${id}, ${optionId}, ${item.quantity})`;
+      })
+      .join(', ');
+
+    const sql = `
+    INSERT INTO product_carts (user_id, product_option_id, quantity)
+    VALUES ${values}
+    ON DUPLICATE KEY UPDATE quantity = VALUES (quantity) + product_carts.quantity
+    `;
+
+    await queryRunner.query(sql);
+    await queryRunner.commitTransaction();
+    return 'ok';
+  } catch (err) {
+    console.error(err);
+    await queryRunner.rollbackTransaction();
+    throwError(500, 'transaction Error');
+  } finally {
+    await queryRunner.release();
+  }
+};
+
 module.exports = {
   getProductByUserIdDao,
+  productCartsTransaction,
 };
