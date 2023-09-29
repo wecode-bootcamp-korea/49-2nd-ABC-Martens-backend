@@ -1,4 +1,11 @@
+const { default: Axios } = require('axios');
 const jwt = require('jsonwebtoken');
+
+exports.axios = Axios.create({
+  headers: {
+    'Content-type': 'application/x-www-form-urlencoded;charset=utf-8',
+  },
+});
 
 /**
  * generateToken
