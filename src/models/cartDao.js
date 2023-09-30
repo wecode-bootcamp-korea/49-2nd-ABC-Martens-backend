@@ -25,7 +25,7 @@ const getProductByUserIdDao = async (id) => {
     LEFT JOIN 
       product_carts ON options.id = product_carts.product_option_id
     LEFT JOIN users ON product_carts.user_id = users.id
-    WHERE users.id = ?
+    WHERE users.id = ? AND (product_carts.is_deleted IS NULL OR product_carts.is_deleted != 1);
           `,
     [id],
   );
@@ -33,8 +33,55 @@ const getProductByUserIdDao = async (id) => {
 };
 
 /**
+ * productCartTransaction - 장바구니에 단일 상품 추가/수정시 발생하는 트랜잭션 함수
+ * @param {object} data - {id: number, productId: number, color: string, quantity: number, size: number}
+ * @returns string
+ */
+const productCartTransaction = async (data) => {
+  const { id, productId, size, quantity, color, isDeleted } = data;
+  const queryRunner = dataSource.createQueryRunner();
+  await queryRunner.connect();
+  await queryRunner.startTransaction();
+
+  try {
+    const [colorId] = await queryRunner.query(
+      `SELECT id FROM colors WHERE color = ?`,
+      [color],
+    );
+    const [optionId] = await queryRunner.query(
+      `SELECT id FROM options WHERE product_id = ? AND color_id = ? AND size = ?`,
+      [productId, colorId.id, parseInt(size)],
+    );
+
+    const sql = `
+    INSERT INTO product_carts (user_id, product_option_id, quantity, is_deleted, deleted_at)
+    VALUES (?, ?, ?, ?, ?)
+    ON DUPLICATE KEY UPDATE 
+      quantity = VALUES(quantity) + product_carts.quantity,
+      is_deleted = VALUES(is_deleted);    
+    `;
+    console.log(new Date());
+    await queryRunner.query(sql, [
+      id,
+      optionId.id,
+      quantity,
+      isDeleted === 'Y' ? 1 : null,
+      isDeleted === 'Y' ? 'CURRENT_TIMESTAMP' : null,
+    ]);
+    await queryRunner.commitTransaction();
+    return 'ok';
+  } catch (err) {
+    console.error(err);
+    await queryRunner.rollbackTransaction();
+    throwError(500, 'transaction failed');
+  } finally {
+    await queryRunner.release();
+  }
+};
+
+/**
  * productCartsTransaction - 장바구니에 상품 추가/수정시 발생하는 트랜잭션 함수
- * @param {object[]} data - {id: number, productList: [{id: number, productId: number, color: string, quantity: number, size: number}]}
+ * @param {object[]} data - {id: number, productList: [{productId: number, color: string, quantity: number, size: number}]}
  * @returns string
  */
 const productCartsTransaction = async (data) => {
@@ -48,6 +95,12 @@ const productCartsTransaction = async (data) => {
     const colors = productList.map((item) => item.color);
     const sizes = productList.map((item) => item.size);
     const productIds = productList.map((item) => item.productId);
+    const isDeletedList = productList.map((item) => ({
+      productId: item.productId,
+      size: item.size,
+      color: item.color,
+      isDeleted: item.isDeleted,
+    }));
 
     const colorIdsResult = await queryRunner.query(
       `SELECT id, color FROM colors WHERE color IN (?)`,
@@ -66,14 +119,27 @@ const productCartsTransaction = async (data) => {
             o.color_id === colorId &&
             o.size === parseInt(item.size),
         ).id;
-        return `(${id}, ${optionId}, ${item.quantity})`;
+        const isDeletedElement = isDeletedList.find(
+          (d) =>
+            d.productId === item.productId &&
+            d.size === item.size &&
+            d.color === item.color,
+        ).isDeleted;
+
+        return `(${id}, ${optionId}, ${item.quantity}, ${
+          isDeletedElement === 'Y' ? 1 : null
+        })`;
       })
       .join(', ');
 
+    console.log(values);
+
     const sql = `
-    INSERT INTO product_carts (user_id, product_option_id, quantity)
+    INSERT INTO product_carts (user_id, product_option_id, quantity, is_deleted)
     VALUES ${values}
-    ON DUPLICATE KEY UPDATE quantity = VALUES (quantity) + product_carts.quantity
+    ON DUPLICATE KEY UPDATE quantity = VALUES(quantity) + product_carts.quantity,
+    is_deleted = VALUES(is_deleted), 
+    deleted_at = CASE WHEN VALUES(is_deleted) = 1 THEN CURRENT_TIMESTAMP ELSE product_carts.deleted_at END
     `;
 
     await queryRunner.query(sql);
@@ -82,7 +148,7 @@ const productCartsTransaction = async (data) => {
   } catch (err) {
     console.error(err);
     await queryRunner.rollbackTransaction();
-    throwError(500, 'transaction Error');
+    throwError(500, 'transaction failed');
   } finally {
     await queryRunner.release();
   }
@@ -90,5 +156,6 @@ const productCartsTransaction = async (data) => {
 
 module.exports = {
   getProductByUserIdDao,
+  productCartTransaction,
   productCartsTransaction,
 };

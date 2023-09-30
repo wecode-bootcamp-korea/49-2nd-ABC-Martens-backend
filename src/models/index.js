@@ -1,5 +1,9 @@
 const { getUserIdByEmailDao, createUserDao } = require('./userDao');
-const { getProductByUserIdDao, productCartsTransaction } = require('./cartDao');
+const {
+  getProductByUserIdDao,
+  productCartTransaction,
+  productCartsTransaction,
+} = require('./cartDao');
 
 module.exports = {
   userDao: {
@@ -8,6 +12,7 @@ module.exports = {
   },
   cartDao: {
     getProductByUserIdDao,
+    productCartTransaction,
     productCartsTransaction,
   },
 };

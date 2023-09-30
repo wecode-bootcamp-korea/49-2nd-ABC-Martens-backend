@@ -1,6 +1,7 @@
 const { getUserIdByEmailService, createUserService } = require('./userService');
 const {
   getCartProductByUserIdService,
+  addProductCartService,
   addProductCartsService,
 } = require('./cartService');
 
@@ -11,6 +12,7 @@ module.exports = {
   },
   cartService: {
     getCartProductByUserIdService,
+    addProductCartService,
     addProductCartsService,
   },
 };
