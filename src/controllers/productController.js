@@ -38,6 +38,8 @@ const create = async (req, res) => {
 const deleter = async (req, res) => {
   const id = req.params;
   const productDeleter = await productService.productDeleter(Number(id), res);
+  const optionDeleter = await productService.optionDeleter(Number(id), res);
+  const imageDeleter = await productService.imageDeleter(Number(id), res);
   console.log('CONTROLLER: RECEIVED FROM SERVICE SUCCESSFULLY');
   return res.status(200).json(productDeleter);
 };

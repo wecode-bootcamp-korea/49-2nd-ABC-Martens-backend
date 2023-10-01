@@ -60,13 +60,13 @@ const productDeleter = async (id) => {
 };
 
 const optionDeleter = async (id) => {
-  await req.dataSource.query(`DELETE * FROM options WHERE id = ${id}`);
+  await req.dataSource.query(`DELETE * FROM options WHERE product_id = ${id}`);
   console.log('DAO: PRODUCT_OPTION_DELETED_SUCCESSFULLY');
   return JSON.parse("DAO: OPTION DELETED")
 };
 
 const imageDeleter = async (id) => {
-  await req.dataSource.query(`DELETE * FROM product_images WHERE id = ${id}`);
+  await req.dataSource.query(`DELETE * FROM product_images WHERE product_id = ${id}`);
   console.log('DAO: PRODUCT_IMAGES_DELETED_SUCCESSFULLY');
   return JSON.parse("DAO: IMAGE DELETED")
 };
