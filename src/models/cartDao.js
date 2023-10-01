@@ -33,12 +33,18 @@ const getProductByUserIdDao = async (id) => {
 };
 
 /**
- * productCartTransaction - 장바구니에 단일 상품 추가/수정시 발생하는 트랜잭션 함수
+ * @function productCartTransaction - 장바구니에 단일 상품 추가/수정시 발생하는 트랜잭션 함수
  * @param {object} data - {id: number, productId: number, color: string, quantity: number, size: number}
  * @returns string
  */
-const productCartTransaction = async (data) => {
-  const { id, productId, size, quantity, color, isDeleted } = data;
+const productCartTransaction = async ({
+  id,
+  productId,
+  size,
+  quantity,
+  color,
+  isDeleted,
+}) => {
   const queryRunner = dataSource.createQueryRunner();
   await queryRunner.connect();
   await queryRunner.startTransaction();
@@ -80,13 +86,11 @@ const productCartTransaction = async (data) => {
 };
 
 /**
- * productCartsTransaction - 장바구니에 상품 추가/수정시 발생하는 트랜잭션 함수
+ * @function productCartsTransaction - 장바구니에 상품 추가/수정시 발생하는 트랜잭션 함수
  * @param {object[]} data - {id: number, productList: [{productId: number, color: string, quantity: number, size: number}]}
  * @returns string
  */
-const productCartsTransaction = async (data) => {
-  const { id, productList } = data;
-
+const productCartsTransaction = async ({ id, productList }) => {
   const queryRunner = dataSource.createQueryRunner();
   await queryRunner.connect();
   await queryRunner.startTransaction();
@@ -131,8 +135,6 @@ const productCartsTransaction = async (data) => {
         })`;
       })
       .join(', ');
-
-    console.log(values);
 
     const sql = `
     INSERT INTO product_carts (user_id, product_option_id, quantity, is_deleted)
