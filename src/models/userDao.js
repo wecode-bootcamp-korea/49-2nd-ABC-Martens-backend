@@ -39,7 +39,17 @@ const createUserDao = (
   );
 };
 
+const setNewPasswordDao = async (id, password) => {
+  await dataSource.query(
+    `
+  UPDATE users SET password = ? WHERE id = ? 
+  `,
+    [password, id],
+  );
+};
+
 module.exports = {
   getUserIdByEmailDao,
   createUserDao,
+  setNewPasswordDao,
 };

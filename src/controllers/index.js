@@ -1,4 +1,8 @@
-const { socialLoginController } = require('./userController');
+const {
+  socialLoginController,
+  getVerificationCodeController,
+  setNewPasswordController,
+} = require('./userController');
 const {
   getCartProductByUserIdController,
   addProductCartController,
@@ -12,11 +16,15 @@ const {
 } = require('./orderController');
 
 module.exports = {
-  userController: { socialLoginController },
+  userController: {
+    socialLoginController,
+    getVerificationCodeController,
+    setNewPasswordController
+    },
   cartController: {
     getCartProductByUserIdController,
     addProductCartController,
-    addProductCartsController,
+    addProductCartsController
   },
   orderController: {
     getOrderAddressController,
