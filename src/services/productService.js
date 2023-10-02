@@ -8,6 +8,7 @@ const introducer = productDao.introducer;
 const imageLoader = productDao.imageLoader;
 const option = productDao.option;
 const price = productDao.price;
+const productCreator = productDao.productCreator;
 
 const productReader = async (id) => {
   const productSelector = await productDao.selector(id);
@@ -39,7 +40,13 @@ const productDeleter = async (id) => {
   return res.status(200).json('PRODUCT_DELETED_SUCCESSFULLY');
 };
 
+const productCreater = async (req) => {
+  const productCreate = productDao.productCreator;
+  return res.status(200).json("PRODUCT_CREATED_SUCCESSFULLY");
+}
+
 module.exports = {
   productReader,
   productDeleter,
+  productCreater
 };

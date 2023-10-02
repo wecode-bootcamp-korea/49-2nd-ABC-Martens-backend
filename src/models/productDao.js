@@ -71,7 +71,16 @@ const imageDeleter = async (id) => {
   return JSON.parse("DAO: IMAGE DELETED")
 };
 
+const productCreator = async (req) => {
+  await req.dataSource.query(`INSERT INTO products ('product_name', 'price', 'original_price', 'products_description') VALUES $(product_name), $(price), $(original_price), $(product_description)`)
+  return JSON.parse("PRODUCT_CREATED")
+}
+
+
+
 module.exports = {
+  productCreator,
+  
   selector,
   introducer,
   price,

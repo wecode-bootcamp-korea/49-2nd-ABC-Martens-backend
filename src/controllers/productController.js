@@ -12,42 +12,11 @@ const detail = async (req, res) => {
   return res.status(200).json(productReader);
 };
 
-const create = async (req, res) => {
-  const productRequestForCreation = req.body;
-  const { product_name, price, original_price, products_description } =
-    productRequestForCreation;
 
-  if (!product_name) {
-    return res.status(400).json('KEY_ERROR');
-  }
-
-  if (!price) {
-    return res.status(400).json('KEY_ERROR');
-  }
-
-  if (!original_price) {
-    return res.status(400).json('KEY_ERROR');
-  }
-
-  const detailProductCreator = await productCreator.productCreater({
-    productRequestForCreation,
-  });
-  console.log('CONTROLLER: PASSED TO SERVICE SUCCESSFULLY');
-};
-
-const deleter = async (req, res) => {
-  const id = req.params;
-  const productDeleter = await productService.productDeleter(Number(id), res);
-  const optionDeleter = await productService.optionDeleter(Number(id), res);
-  const imageDeleter = await productService.imageDeleter(Number(id), res);
-  console.log('CONTROLLER: RECEIVED FROM SERVICE SUCCESSFULLY');
-  return res.status(200).json(productDeleter);
 };
 
 module.exports = {
-  detail,
-  deleter,
-  create
+  detail
 };
 
 // const update = async (req, res) => {
@@ -99,3 +68,36 @@ module.exports = {
 //     deleteProduct,
 
 // }
+
+// const creator = async (req, res) => {
+//   const productRequestForCreation = req.body;
+//   console.log("CONTROLLER: PASSED TO SERVICE SUCCESFULLY")
+//   const { product_name, price, original_price, products_description } =
+//     productRequestForCreation;
+//   console.log("CONTROLLER RECEIVED")
+
+//   if (!product_name) {
+//     return res.status(400).json('KEY_ERROR');
+//   }
+
+//   if (!price) {
+//     return res.status(400).json('KEY_ERROR');
+//   }
+
+//   if (!original_price) {
+//     return res.status(400).json('KEY_ERROR');
+//   }
+
+//   const detailProductCreator = await productCreator.productCreater({
+//     productRequestForCreation,
+//   });
+//   console.log('CONTROLLER: PASSED TO SERVICE SUCCESSFULLY');
+// };
+
+// const deleter = async (req, res) => {
+//   const id = req.params;
+//   const productDeleter = await productService.productDeleter(Number(id), res);
+//   const optionDeleter = await productService.optionDeleter(Number(id), res);
+//   const imageDeleter = await productService.imageDeleter(Number(id), res);
+//   console.log('CONTROLLER: RECEIVED FROM SERVICE SUCCESSFULLY');
+//   return res.status(200).json(productDeleter);
