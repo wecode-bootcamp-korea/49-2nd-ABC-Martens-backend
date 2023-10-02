@@ -9,9 +9,6 @@ const socialLoginController = async (req, res, next) => {
     if (req.socialData) {
       const existUser = req.existUser;
       const access_token = generateToken(existUser);
-      // res.cookie('access_token', access_token, {
-      //   httpOnly: true,
-      // });
       return res.redirect(process.env.CLIENT_URI + '?token=' + access_token);
     }
     throwError(500, 'integration server error');
