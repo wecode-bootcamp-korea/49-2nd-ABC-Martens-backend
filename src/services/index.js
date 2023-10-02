@@ -1,4 +1,9 @@
-const { getUserIdByEmailService, createUserService } = require('./userService');
+const {
+  getUserIdByEmailService,
+  createUserService,
+  mailSendService,
+  setNewPasswordService,
+} = require('./userService');
 const {
   getCartProductByUserIdService,
   addProductCartService,
@@ -9,6 +14,8 @@ module.exports = {
   userService: {
     getUserIdByEmailService,
     createUserService,
+    mailSendService,
+    setNewPasswordService,
   },
   cartService: {
     getCartProductByUserIdService,
