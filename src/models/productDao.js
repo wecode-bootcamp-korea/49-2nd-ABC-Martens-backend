@@ -16,7 +16,7 @@ const introducer = async (id) => {
     `SELECT product_name, price, original_price FROM products WHERE id = ${id}`,
   );
   console.log('DAO: PRODUCT_READ_SUCCESSFULLY');
-  return JSON.parse(JSON.stringify(introducerViewer));
+  return JSON.parse(JSON.stringify(introducerViewer))
 };
 
 const imageLoader = async (id) => {
