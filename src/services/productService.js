@@ -8,6 +8,8 @@ const productReader = async (id) => {
   const optionSelector = await productDao.option(id);
   const priceSelector = await productDao.price(id);
 
+  
+
   const responseReader = {
     product: productSelector,
     introduction: productIntroducer,

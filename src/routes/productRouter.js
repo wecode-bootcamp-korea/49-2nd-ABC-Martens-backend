@@ -6,4 +6,3 @@ const detail = productController.detail;
 router.get('/detail/:id', productController.detail);
 
 module.exports = router;
-

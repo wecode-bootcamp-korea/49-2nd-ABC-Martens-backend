@@ -4,28 +4,28 @@ const selector = async (id) => {
   const selectorViewer = await dataSource.query(
     `SELECT id  FROM products WHERE id = ${id}`,
   );
-  return JSON.parse(JSON.stringify(selectorViewer));
+  return selectorViewer;
 };
 
 const introducer = async (id) => {
   const introducerViewer = await dataSource.query(
     `SELECT product_name, price, original_price FROM products WHERE id = ${id}`,
   );
-  return JSON.parse(JSON.stringify(introducerViewer))
+  return introducerViewer;
 };
 
 const imageLoader = async (id) => {
   const imageViewer = await dataSource.query(
     `SELECT detail_image_url, thumbnail_image_url thumbnail_image_url, is_thumbnail FROM product_images WHERE product_id = ${id}`,
   );
-  return JSON.parse(JSON.stringify(imageViewer));
+  return imageViewer;
 };
 
 const option = async (id) => {
   const optionViewer = await dataSource.query(
     `SELECT product_id, color_id, quantity, size FROM options WHERE product_id = ${id}`,
   );
-  return JSON.parse(JSON.stringify(optionViewer));
+  return optionViewer;
 };
 
 const colorLoader = async (id) => {
@@ -33,16 +33,15 @@ const colorLoader = async (id) => {
   const colorViewer = await dataSource.query(
     `SELECT color FROM colors WHERE color_id = ${color_id}`,
   );
-  return JSON.parse(JSON.stringify(colorViewer));
+  return colorViewer;
 };
 
 const price = async (id) => {
   const priceViewer = await dataSource.query(
     `SELECT price, original_price FROM products WHERE id = ${id}`,
   );
-  return JSON.parse(JSON.stringify(priceViewer));
+  return priceViewer;
 };
-
 
 module.exports = {
   selector,
