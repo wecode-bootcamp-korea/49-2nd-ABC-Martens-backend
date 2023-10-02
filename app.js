@@ -63,14 +63,7 @@ app.post('/login', async (req, res) => {
   }
 });
 
-const server = http.createServer(app);
-const start = async () => {
-  try {
-    server.listen(8000, () => console.log(`Server is listening on 8000`));
-  } catch (err) {
-    console.error(err);
-  }
-};
+
 
 app.use((req, _, next) => {
   const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
