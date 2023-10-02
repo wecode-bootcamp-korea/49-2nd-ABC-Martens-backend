@@ -6,10 +6,11 @@ CREATE TABLE `product_carts` (
   `quantity` integer NOT NULL,
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
-  `delete_at` datetime,
+  `deleted_at` TIMESTAMP NULL,
   `is_deleted` tinyint,
   FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
-  FOREIGN KEY (`product_option_id`) REFERENCES `options` (`id`)
+  FOREIGN KEY (`product_option_id`) REFERENCES `options` (`id`),
+  UNIQUE KEY `user_product_option` (`user_id`, `product_option_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 -- migrate:down
 DROP TABLE product_carts

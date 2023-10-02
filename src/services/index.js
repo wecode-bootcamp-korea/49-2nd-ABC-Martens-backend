@@ -4,6 +4,11 @@ const {
   mailSendService,
   setNewPasswordService,
 } = require('./userService');
+const {
+  getCartProductByUserIdService,
+  addProductCartService,
+  addProductCartsService,
+} = require('./cartService');
 
 module.exports = {
   userService: {
@@ -11,5 +16,10 @@ module.exports = {
     createUserService,
     mailSendService,
     setNewPasswordService,
+  },
+  cartService: {
+    getCartProductByUserIdService,
+    addProductCartService,
+    addProductCartsService,
   },
 };

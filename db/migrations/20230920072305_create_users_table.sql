@@ -5,7 +5,7 @@ CREATE TABLE `users` (
   `birth_date` varchar(8) NOT NULL,
   `gender` varchar(10) NOT NULL,
   `is_checked_marketing` tinyint,
-  `password` varchar(50) NOT NULL,
+  `password` varchar(200) NOT NULL,
   `nickname` varchar(20) NOT NULL,
   `phone_number` varchar(20) NOT NULL,
   `profile_image` varchar(100),
