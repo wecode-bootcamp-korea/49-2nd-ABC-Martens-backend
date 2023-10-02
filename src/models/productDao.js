@@ -30,7 +30,7 @@ const imageLoader = async (id) => {
 
 const option = async (id) => {
   const optionViewer = await dataSource.query(
-    `SELECT color_id, quantity, size FROM options WHERE product_id = ${id}`,
+    `SELECT product_id, color_id, quantity, size FROM options WHERE product_id = ${id}`,
   );
   console.log('DAO: OPTION_READ_SUCCESSFULLY');
   return JSON.parse(JSON.stringify(optionViewer));
@@ -53,42 +53,12 @@ const price = async (id) => {
   return JSON.parse(JSON.stringify(priceViewer));
 };
 
-const productDeleter = async (id) => {
-  await req.dataSource.query(`DELETE * FROM products WHERE id = ${id}`);
-  console.log('DAO: PRODUCT_DELETED_SUCCESSFULLY');
-  return JSON.parse("DAO: PRODUCT DELETED")
-};
-
-const optionDeleter = async (id) => {
-  await req.dataSource.query(`DELETE * FROM options WHERE product_id = ${id}`);
-  console.log('DAO: PRODUCT_OPTION_DELETED_SUCCESSFULLY');
-  return JSON.parse("DAO: OPTION DELETED")
-};
-
-const imageDeleter = async (id) => {
-  await req.dataSource.query(`DELETE * FROM product_images WHERE product_id = ${id}`);
-  console.log('DAO: PRODUCT_IMAGES_DELETED_SUCCESSFULLY');
-  return JSON.parse("DAO: IMAGE DELETED")
-};
-
-const productCreator = async (req) => {
-  await req.dataSource.query(`INSERT INTO products ('product_name', 'price', 'original_price', 'products_description') VALUES $(product_name), $(price), $(original_price), $(product_description)`)
-  return JSON.parse("PRODUCT_CREATED")
-}
-
-
 
 module.exports = {
-  productCreator,
-  
   selector,
   introducer,
   price,
   colorLoader,
   option,
-  imageLoader,
-
-  imageDeleter,
-  productDeleter,
-  optionDeleter,
+  imageLoader
 };

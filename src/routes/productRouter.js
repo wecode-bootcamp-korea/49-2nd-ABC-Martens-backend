@@ -10,8 +10,3 @@ router.get('/detail/:id', productController.detail);
 
 module.exports = router;
 
-
-http:///localhost:8000/product/detail/1
-
-// router.post('/delete/:id', productController.deleter);
-// router.post(`/creator`, productController.creator);

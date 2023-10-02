@@ -32,21 +32,6 @@ const productReader = async (id) => {
   return responseReader;
 };
 
-const productDeleter = async (id) => {
-  const productDelete = await productDao.productDeleter(id);
-  const optionDelete = await productDao.optionDeleter(id);
-  const imageDelete = await productDao.imageDeleter(id);
-
-  return res.status(200).json('PRODUCT_DELETED_SUCCESSFULLY');
-};
-
-const productCreater = async (req) => {
-  const productCreate = productDao.productCreator;
-  return res.status(200).json("PRODUCT_CREATED_SUCCESSFULLY");
-}
-
 module.exports = {
-  productReader,
-  productDeleter,
-  productCreater
+  productReader
 };
