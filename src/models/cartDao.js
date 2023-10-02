@@ -66,7 +66,6 @@ const productCartTransaction = async ({
       quantity = VALUES(quantity) + product_carts.quantity,
       is_deleted = VALUES(is_deleted);    
     `;
-    console.log(new Date());
     await queryRunner.query(sql, [
       id,
       optionId.id,
