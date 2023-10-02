@@ -1,6 +1,3 @@
-const { socialLoginController } = require('./userController');
-const { productController } = require('./productController');
-
 const {
   socialLoginController,
   getVerificationCodeController,
@@ -11,6 +8,9 @@ const {
   addProductCartController,
   addProductCartsController,
 } = require('./cartController');
+const { 
+  productController 
+} = require('./productController');
 
 module.exports = {
   userController: {
@@ -27,4 +27,3 @@ module.exports = {
     productController 
   }
 };
-

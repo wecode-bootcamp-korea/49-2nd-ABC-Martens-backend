@@ -9,6 +9,9 @@ const {
   addProductCartService,
   addProductCartsService,
 } = require('./cartService');
+const {
+  productReader
+} = require('./productService');
 
 module.exports = {
   userService: {
@@ -22,4 +25,7 @@ module.exports = {
     addProductCartService,
     addProductCartsService,
   },
+  productService: {
+    productReader
+  }
 };
