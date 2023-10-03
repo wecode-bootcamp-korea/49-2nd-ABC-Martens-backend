@@ -1,6 +1,5 @@
 const { allProductService } = require('../services');
 const { productSortService, categoryCheckService } = allProductService;
-// const { dataSource } = require('../models');
 
 const allProduct = async (req, res) => {
   console.log(req.query);
@@ -22,7 +21,6 @@ const allProduct = async (req, res) => {
     }
 
     //  정렬 ----------------------------------------
-    console.log('error fin');
 
     const productSortServiceResult = await productSortService(
       sub_category_id,

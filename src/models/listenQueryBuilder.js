@@ -8,12 +8,12 @@
 const sortQueryBuilder = async (sub_category_id, category_id, sortBy) => {
   try {
     const orderingSortWhereBuilder = {
-      ranking: `WHERE sub_category_id = ${sub_category_id} GROUP BY products.id`, // 랭킹순(별점 내림차순)
-      regist: `WHERE sub_category_id = ${sub_category_id}`, // 신규등록순
-      low_price: `WHERE sub_category_id = ${sub_category_id}`, // 낮은가격순
-      high_price: `WHERE sub_category_id = ${sub_category_id}`, // 높은가격순
-      review: `WHERE sub_category_id = ${sub_category_id} GROUP BY products.id`, // 상품평많은순
-      sale: `WHERE sub_category_id = ${sub_category_id}`, // 판매량순(구매 완료 상태 중 구매 아이템의 구매 수량순)
+      ranking: `WHERE sub_category_id = ${sub_category_id} GROUP BY products.id`,
+      regist: `WHERE sub_category_id = ${sub_category_id}`,
+      low_price: `WHERE sub_category_id = ${sub_category_id}`,
+      high_price: `WHERE sub_category_id = ${sub_category_id}`,
+      review: `WHERE sub_category_id = ${sub_category_id} GROUP BY products.id`,
+      sale: `WHERE sub_category_id = ${sub_category_id}`,
       '': '',
     };
 
@@ -29,12 +29,12 @@ const sortQueryBuilder = async (sub_category_id, category_id, sortBy) => {
     const orderingSortWhere = await orderingSortWhereBuilder[sortBy];
 
     const orderingSortOrderByBuilder = {
-      ranking: 'ORDER BY rating DESC, products.id', // 랭킹순(별점 내림차순)
-      regist: 'ORDER BY created_at DESC, products.id', // 신규등록순
-      low_price: 'ORDER BY price, products.id', // 낮은가격순
-      high_price: 'ORDER BY price DESC, products.id', // 높은가격순
-      review: 'ORDER BY review DESC, products.id', // 상품평많은순
-      sale: 'ORDER BY total_sales DESC, products.id', // 판매량순(구매 완료 상태 중 구매 아이템의 구매 수량순)
+      ranking: 'ORDER BY rating DESC, products.id',
+      regist: 'ORDER BY created_at DESC, products.id',
+      low_price: 'ORDER BY price, products.id',
+      high_price: 'ORDER BY price DESC, products.id',
+      review: 'ORDER BY review DESC, products.id',
+      sale: 'ORDER BY total_sales DESC, products.id',
       '': '',
     };
 

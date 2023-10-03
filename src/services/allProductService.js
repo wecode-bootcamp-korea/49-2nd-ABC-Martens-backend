@@ -36,5 +36,3 @@ module.exports = {
   productSortService,
   categoryCheckService,
 };
-
-// service에서 querybuilder로 매개변수를 보내고(=require로 querybuilder를 불러오고)  /  dao를 불러오며 querybuilder를 넣는다.
