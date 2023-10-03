@@ -8,6 +8,12 @@ const {
   addProductCartController,
   addProductCartsController,
 } = require('./cartController');
+const {
+  getOrderAddressController,
+  addOrderAddressController,
+  addProductOrderController,
+  addProductOrdersController,
+} = require('./orderController');
 
 module.exports = {
   userController: {
@@ -19,5 +25,11 @@ module.exports = {
     getCartProductByUserIdController,
     addProductCartController,
     addProductCartsController
+  },
+  orderController: {
+    getOrderAddressController,
+    addOrderAddressController,
+    addProductOrderController,
+    addProductOrdersController,
   },
 };
