@@ -48,8 +48,15 @@ const setNewPasswordDao = async (id, password) => {
   );
 };
 
+const getUserUidByOrderNumberQuery = ` SELECT uid 
+    FROM users 
+    LEFT JOIN orders ON users.id = orders.user_id
+    WHERE order_no = ?
+  `;
+
 module.exports = {
   getUserIdByEmailDao,
   createUserDao,
   setNewPasswordDao,
+  getUserUidByOrderNumberQuery,
 };

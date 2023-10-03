@@ -7,6 +7,7 @@ const {
   addOrderAddressController,
   addProductOrderController,
   addProductOrdersController,
+  checkoutSuccessController,
 } = orderController;
 
 router.get('/address', tokenVerification, getOrderAddressController);
@@ -14,5 +15,7 @@ router.post('/address', tokenVerification, addOrderAddressController);
 
 router.post('/:productOptionId', tokenVerification, addProductOrderController);
 router.post('/', tokenVerification, addProductOrdersController);
+
+router.get('/checkout/callback/success', checkoutSuccessController);
 
 module.exports = router;

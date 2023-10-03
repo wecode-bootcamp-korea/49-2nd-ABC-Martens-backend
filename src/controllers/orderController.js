@@ -1,11 +1,12 @@
 const { isEmpty } = require('lodash');
 const { orderService } = require('../services');
-const { addOrderAddressService } = require('../services/orderService');
 const { throwError } = require('../utils');
 const {
   getOrderAddressService,
   addProductOrderService,
   addProductOrdersService,
+  addOrderAddressService,
+  orderCheckoutService,
 } = orderService;
 
 const getOrderAddressController = async (req, res, next) => {
@@ -73,11 +74,34 @@ const addProductOrdersController = async (req, res, next) => {
     if (isEmpty(productList) || !addressId) throwError(400, 'key error');
     const message = await addProductOrdersService({ id, ...req.body });
     if (message) {
-      res.json(201).status({
-        message,
-      });
+      res.status(201).json(message);
     }
     throwError(400);
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+};
+
+const getCheckoutController = async (req, res, next) => {
+  try {
+    const { id } = req.userData;
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+};
+const checkoutSuccessController = async (req, res, next) => {
+  try {
+    orderCheckoutService({ ...req.query });
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+};
+const checkoutFailController = async (req, res, next) => {
+  try {
+    const { id } = req.userData;
   } catch (err) {
     console.error(err);
     next(err);
@@ -89,4 +113,7 @@ module.exports = {
   addOrderAddressController,
   addProductOrderController,
   addProductOrdersController,
+  getCheckoutController,
+  checkoutSuccessController,
+  checkoutFailController,
 };
