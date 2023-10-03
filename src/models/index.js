@@ -10,6 +10,9 @@ const {
   productCartsTransaction,
 } = require('./cartDao');
 
+const { productSortDao, categoryCheckDao } = require('./allProductDao');
+const { sortQueryBuilder, pageQueryBuilder } = require('./listenQueryBuilder');
+
 module.exports = {
   userDao: {
     getUserIdByEmailDao,
@@ -21,4 +24,13 @@ module.exports = {
     productCartTransaction,
     productCartsTransaction,
   },
+  allProductDao: {
+    productSortDao,
+    categoryCheckDao,
+  },
+  listenQueryBuilder: {
+    sortQueryBuilder,
+    pageQueryBuilder,
+  },
+  dataSource,
 };

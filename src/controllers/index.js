@@ -9,15 +9,20 @@ const {
   addProductCartsController,
 } = require('./cartController');
 
+const { allProduct } = require('./allProductController');
+
 module.exports = {
   userController: {
     socialLoginController,
     getVerificationCodeController,
-    setNewPasswordController
-    },
+    setNewPasswordController,
+  },
   cartController: {
     getCartProductByUserIdController,
     addProductCartController,
-    addProductCartsController
+    addProductCartsController,
+  },
+  allProductController: {
+    allProduct,
   },
 };
