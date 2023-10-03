@@ -111,7 +111,7 @@ const productOrdersTransaction = async ({
       [orderNo],
     );
 
-    const values = productList
+    const orderValues = productList
       .map((item) => {
         return `(${orderId.id}, ${productOptionIds.find(
           (pid) => item.productOptionId === pid,
@@ -119,12 +119,27 @@ const productOrdersTransaction = async ({
       })
       .join(', ');
 
-    const sql = `
+    const insertOrder = `
     INSERT INTO product_orders (order_id, product_option_id, product_quantity)
-    VALUES ${values}
+    VALUES ${orderValues}
     `;
 
-    await queryRunner.query(sql);
+    const deleteValues = productList.map((item) => {
+      return `(${id}, ${productOptionIds.find(
+        (pid) => item.productOptionId === pid,
+      )}, ${quantities.find((q) => item.quantity === q)}, 1)`;
+    });
+
+    const deleteCart = `
+    INSERT INTO product_carts (user_id, product_option_id, quantity, is_deleted)
+    VALUES ${deleteValues}
+    ON DUPLICATE KEY UPDATE quantity = VALUES(quantity) - product_carts.quantity,
+    is_deleted = VALUES(is_deleted), 
+    deleted_at = CASE WHEN VALUES(is_deleted) = 1 THEN CURRENT_TIMESTAMP ELSE product_carts.deleted_at END
+    `;
+
+    await queryRunner.query(insertOrder);
+    await queryRunner.query(deleteCart);
     await queryRunner.commitTransaction();
     return 'order created';
   } catch (err) {
