@@ -4,9 +4,7 @@ const { productSortService, categoryCheckService } = allProductService;
 const allProduct = async (req, res) => {
   console.log(req.query);
   try {
-    const { category_id, sub_category_id, sortBy, page } = req.query;
-
-    //  에러 핸들링 ----------------------------------------
+    const { category_id, sub_category_id, sortBy, page } = req.query; //  에러 핸들링 ----------------------------------------
 
     const categoryCheckController = await categoryCheckService(
       sub_category_id,
@@ -18,9 +16,7 @@ const allProduct = async (req, res) => {
       error.statusCode = 400;
       error.message = `category check result - main and sub category unmatched`;
       throw error;
-    }
-
-    //  정렬 ----------------------------------------
+    } //  정렬 ----------------------------------------
 
     const productSortServiceResult = await productSortService(
       sub_category_id,
