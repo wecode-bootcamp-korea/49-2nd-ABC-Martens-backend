@@ -1,8 +1,11 @@
 const express = require('express');
+const https = require('https');
+const fs = require('fs');
+const v4 = require('uuid4');
 const morgan = require('morgan');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
-const jwt = require("jsonwebtoken");
+const jwt = require('jsonwebtoken');
 const { dataSource: myDataSource } = require('./src/models/dataSource');
 
 require('dotenv').config();
@@ -11,7 +14,12 @@ const app = express();
 
 const indexRouter = require('./src/routes');
 app.set('port', process.env.PORT || 8000);
-app.use(cors());
+app.use(
+  cors({
+    origin: '*',
+    credentials: true,
+  }),
+);
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

@@ -9,7 +9,8 @@ CREATE TABLE `users` (
   `nickname` varchar(20) NOT NULL,
   `phone_number` varchar(20) NOT NULL,
   `profile_image` varchar(100),
-  `provider` varchar(20)
+  `provider` varchar(20),
+  `uid` varchar(100) NOT NULL UNIQUE,
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 -- migrate:down
 DROP TABLE users
