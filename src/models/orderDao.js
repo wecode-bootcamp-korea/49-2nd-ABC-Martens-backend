@@ -1,5 +1,6 @@
 const { throwError } = require('../utils');
 const { dataSource } = require('./dataSource');
+const { getUserUidByOrderNumberQuery } = require('./userDao');
 
 const getOrderAddressByUserId = async (id) => {
   const result = await dataSource.query(
@@ -68,8 +69,18 @@ const productOrderTransaction = async ({
       `,
       [orderId.id, productOptionId, quantity],
     );
+    const [userUid] = await queryRunner.query(
+      getUserUidByOrderNumberQuery,
+      orderNo,
+    );
+
     await queryRunner.commitTransaction();
-    return 'order created';
+
+    return {
+      message: 'order created',
+      orderNo,
+      userUid: userUid.uid,
+    };
   } catch (err) {
     console.error(err);
     await queryRunner.rollbackTransaction();
@@ -133,15 +144,94 @@ const productOrdersTransaction = async ({
     const deleteCart = `
     INSERT INTO product_carts (user_id, product_option_id, quantity, is_deleted)
     VALUES ${deleteValues}
-    ON DUPLICATE KEY UPDATE quantity = VALUES(quantity) - product_carts.quantity,
+    ON DUPLICATE KEY UPDATE quantity = product_carts.quantity - VALUES(quantity),
     is_deleted = VALUES(is_deleted), 
     deleted_at = CASE WHEN VALUES(is_deleted) = 1 THEN CURRENT_TIMESTAMP ELSE product_carts.deleted_at END
     `;
 
     await queryRunner.query(insertOrder);
     await queryRunner.query(deleteCart);
+    const [userUid] = await queryRunner.query(
+      getUserUidByOrderNumberQuery,
+      orderNo,
+    );
     await queryRunner.commitTransaction();
-    return 'order created';
+
+    return {
+      message: 'order created',
+      orderNo,
+      userUid: userUid.uid,
+    };
+  } catch (err) {
+    console.error(err);
+    await queryRunner.rollbackTransaction();
+    throwError(500, 'transaction failed');
+  } finally {
+    await queryRunner.release();
+  }
+};
+
+const orderCheckoutDao = async ({ orderNo, amount, method }) => {
+  const queryRunner = dataSource.createQueryRunner();
+  await queryRunner.connect();
+  await queryRunner.startTransaction();
+
+  try {
+    const [result] = await queryRunner.query(
+      `
+      SELECT 
+      users.id, 
+      orders.id AS orderId
+      FROM users
+      LEFT JOIN orders ON users.id = orders.user_id
+      WHERE order_no = ?
+    `,
+      [orderNo],
+    );
+    const [methodId] = await queryRunner.query(
+      `SELECT id FROM payment_method WHERE method = ?`,
+      [method],
+    );
+    const productOrdersList = await queryRunner.query(
+      `
+        SELECT 
+        product_option_id AS productOptionId, 
+        product_quantity AS productQuantity
+        FROM product_orders WHERE order_id = ?
+      `,
+      [result.orderId],
+    );
+    await queryRunner.query(
+      `
+      INSERT INTO payments (user_id, order_id, amount, method_id, status) VALUES (?, ?, ?, ?, ?)
+    `,
+      [result.id, result.orderId, amount, methodId.id, 'success'],
+    );
+    await queryRunner.query(
+      `
+      UPDATE orders SET order_status = 'success' WHERE order_no = ?
+      `,
+      [orderNo],
+    );
+    const caseMap = productOrdersList
+      .map((item) => {
+        return `WHEN id = ${item.productOptionId} THEN quantity - ${item.productQuantity}`;
+      })
+      .join(' ');
+    const optionIds = productOrdersList
+      .map((item) => item.productOptionId)
+      .join(', ');
+    const optionQuantityUpdateQuery = `
+      UPDATE options
+      SET quantity = CASE ${caseMap} ELSE quantity
+      END 
+      WHERE id IN (${optionIds})
+    `;
+
+    await queryRunner.query(optionQuantityUpdateQuery);
+    await queryRunner.commitTransaction();
+
+    return 'ok';
   } catch (err) {
     console.error(err);
     await queryRunner.rollbackTransaction();
@@ -156,4 +246,5 @@ module.exports = {
   addOrderAddress,
   productOrderTransaction,
   productOrdersTransaction,
+  orderCheckoutDao,
 };

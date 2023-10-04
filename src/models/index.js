@@ -1,8 +1,8 @@
-const { dataSource } = require('./dataSource');
 const {
   getUserIdByEmailDao,
   createUserDao,
   setNewPasswordDao,
+  getUserUidByOrderNumberQuery,
 } = require('./userDao');
 const {
   getProductByUserIdDao,
@@ -14,6 +14,7 @@ const {
   addOrderAddress,
   productOrderTransaction,
   productOrdersTransaction,
+  orderCheckoutDao,
 } = require('./orderDao');
 
 module.exports = {
@@ -21,6 +22,7 @@ module.exports = {
     getUserIdByEmailDao,
     createUserDao,
     setNewPasswordDao,
+    getUserUidByOrderNumberQuery,
   },
   cartDao: {
     getProductByUserIdDao,
@@ -32,5 +34,6 @@ module.exports = {
     addOrderAddress,
     productOrderTransaction,
     productOrdersTransaction,
+    orderCheckoutDao,
   },
 };

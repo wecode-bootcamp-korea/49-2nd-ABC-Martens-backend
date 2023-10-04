@@ -5,7 +5,9 @@ const {
   addOrderAddress,
   productOrderTransaction,
   productOrdersTransaction,
+  orderCheckoutDao,
 } = orderDao;
+const { throwError, axios } = require('../utils');
 
 const getOrderAddressService = (id) => {
   return getOrderAddressByUserId(id);
@@ -15,14 +17,38 @@ const addOrderAddressService = (data) => {
   return addOrderAddress(data);
 };
 
-const addProductOrderService = (data) => {
+const addProductOrderService = async (data) => {
   const orderNo = generateOrderNumber();
-  return productOrderTransaction({ ...data, orderNo });
+  return await productOrderTransaction({ ...data, orderNo });
 };
 
-const addProductOrdersService = (data) => {
+const addProductOrdersService = async (data) => {
   const orderNo = generateOrderNumber();
   return productOrdersTransaction({ ...data, orderNo });
+};
+
+const orderCheckoutService = async ({ paymentKey, orderId, amount }) => {
+  var options = {
+    method: 'POST',
+    url: 'https://api.tosspayments.com/v1/payments/confirm',
+    headers: {
+      Authorization: `Basic ${process.env.TOSSPAYMENT_SECRET_BASE64}`,
+      'Content-Type': 'application/json',
+    },
+    data: { paymentKey, amount, orderId },
+  };
+  axios
+    .request(options)
+    .then((resData) => {
+      const { orderId, totalAmount, method } = resData;
+      const data = { orderNo: orderId, priceAmount: totalAmount, method };
+      orderCheckoutDao(data);
+    })
+    .catch((err) => {
+      console.error(err);
+      throwError(500, 'integration server error');
+    });
+  return 'ok';
 };
 
 module.exports = {
@@ -30,4 +56,5 @@ module.exports = {
   addOrderAddressService,
   addProductOrderService,
   addProductOrdersService,
+  orderCheckoutService,
 };

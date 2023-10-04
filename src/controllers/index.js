@@ -13,23 +13,25 @@ const {
   addOrderAddressController,
   addProductOrderController,
   addProductOrdersController,
+  checkoutSuccessController,
 } = require('./orderController');
 
 module.exports = {
   userController: {
     socialLoginController,
     getVerificationCodeController,
-    setNewPasswordController
-    },
+    setNewPasswordController,
+  },
   cartController: {
     getCartProductByUserIdController,
     addProductCartController,
-    addProductCartsController
+    addProductCartsController,
   },
   orderController: {
     getOrderAddressController,
     addOrderAddressController,
     addProductOrderController,
     addProductOrdersController,
+    checkoutSuccessController,
   },
 };
