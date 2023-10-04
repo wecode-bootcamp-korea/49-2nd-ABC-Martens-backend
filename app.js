@@ -5,6 +5,7 @@ const v4 = require('uuid4');
 const morgan = require('morgan');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
+const jwt = require("jsonwebtoken");
 const { dataSource: myDataSource } = require('./src/models/dataSource');
 
 require('dotenv').config();
@@ -154,7 +155,7 @@ app.post('/login', async (req, res) => {
     } //보안을 위해 비밀번호, 패스워드 중 오류 알려주지 않기로
 
     // 로그인 성공 시 토큰 발급
-    const token = jwt.sign({ id: existingUser[0].id }, process.env.TYPEORM_JWT);
+    const token = jwt.sign({ id: existingUser[0].id }, process.env.JWT_SECRET);
     return res.status(200).json({
       message: '로그인 성공하였습니다',
       accessToken: token,
