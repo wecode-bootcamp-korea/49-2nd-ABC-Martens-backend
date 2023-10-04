@@ -24,7 +24,7 @@ const addProductOrderService = async (data) => {
 
 const addProductOrdersService = async (data) => {
   const orderNo = generateOrderNumber();
-  return productOrdersTransaction({ ...data, orderNo });
+  return await productOrdersTransaction({ ...data, orderNo });
 };
 
 const orderCheckoutService = async ({ paymentKey, orderId, amount }) => {
