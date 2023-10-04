@@ -15,7 +15,9 @@ const getProductByUserIdDao = async (id) => {
       products.price AS price,
       product_images.thumbnail_image_url AS productThumbnail,
       options.size,
-      product_carts.quantity
+      colors.color,
+      product_carts.quantity, 
+      product_carts.product_option_id AS productOptionId
     FROM 
       products
     LEFT JOIN
@@ -23,7 +25,9 @@ const getProductByUserIdDao = async (id) => {
     LEFT JOIN 
       options ON products.id = options.product_id
     LEFT JOIN 
-      product_carts ON options.id = product_carts.product_option_id
+      colors ON options.color_id = colors.id
+    LEFT JOIN 
+      product_carts ON options.id = product_carts.product_option_id  
     LEFT JOIN users ON product_carts.user_id = users.id
     WHERE users.id = ? AND (product_carts.is_deleted IS NULL OR product_carts.is_deleted != 1);
           `,
@@ -61,7 +65,7 @@ const productCartTransaction = async ({
 
     const sql = `
     INSERT INTO product_carts (user_id, product_option_id, quantity, is_deleted, deleted_at)
-    VALUES (?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ${isDeleted === 'Y' ? 'CURRENT_TIMESTAMP' : null})
     ON DUPLICATE KEY UPDATE 
       quantity = VALUES(quantity) + product_carts.quantity,
       is_deleted = VALUES(is_deleted);    
@@ -71,7 +75,6 @@ const productCartTransaction = async ({
       optionId.id,
       quantity,
       isDeleted === 'Y' ? 1 : null,
-      isDeleted === 'Y' ? 'CURRENT_TIMESTAMP' : null,
     ]);
     await queryRunner.commitTransaction();
     return 'ok';

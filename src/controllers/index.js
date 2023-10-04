@@ -8,6 +8,14 @@ const {
   addProductCartController,
   addProductCartsController,
 } = require('./cartController');
+const { productController } = require('./productController');
+const {
+  getOrderAddressController,
+  addOrderAddressController,
+  addProductOrderController,
+  addProductOrdersController,
+  checkoutSuccessController,
+} = require('./orderController');
 
 const { allProduct } = require('./allProductController');
 
@@ -24,5 +32,16 @@ module.exports = {
   },
   allProductController: {
     allProduct,
+
+  orderController: {
+    getOrderAddressController,
+    addOrderAddressController,
+    addProductOrderController,
+    addProductOrdersController,
+    checkoutSuccessController,
+  },
+  productController: {
+    productController,
+
   },
 };

@@ -1,4 +1,7 @@
 const express = require('express');
+const https = require('https');
+const fs = require('fs');
+const v4 = require('uuid4');
 const morgan = require('morgan');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
@@ -10,7 +13,12 @@ const app = express();
 
 const indexRouter = require('./src/routes');
 app.set('port', process.env.PORT || 8000);
-app.use(cors());
+app.use(
+  cors({
+    origin: '*',
+    credentials: true,
+  }),
+);
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -19,6 +27,7 @@ app.use('/', indexRouter);
 // 회원가입
 app.post('/users', async (req, res) => {
   try {
+    console.log(1);
     const {
       nickname,
       password,
@@ -26,11 +35,11 @@ app.post('/users', async (req, res) => {
       birthDate,
       phoneNumber,
       gender,
-      isCheckedMarketing,
       profileImage = '',
       provider,
     } = req.body;
 
+    console.log(req.body);
     // key error (필수, 입력 정보 없을 경우)
     if (
       !nickname ||
@@ -80,20 +89,20 @@ app.post('/users', async (req, res) => {
     // DB에 회원정보 저장
     const addUser = await myDataSource.query(`
     INSERT INTO users (
-      nickName, isCheckedMarketing                   
-      password, birthDate,
-      email, phoneNumber, gender, profileImage, provider
+      nickname,                   
+      password, birth_date, 
+      email, phone_number, gender, profile_image, provider
       )
     VALUES (
       '${nickname}',
-      '${isCheckedMarketing}',
       '${hashedPw}',
       '${birthDate}',
       '${email}', 
       '${phoneNumber}',
       '${gender}',
       '${profileImage}',
-      '${provider}'
+      '${provider}',
+      '${v4()}
       )
     `);
 

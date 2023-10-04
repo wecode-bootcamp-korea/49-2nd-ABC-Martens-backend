@@ -8,4 +8,13 @@ router.use('/users', userRouter);
 router.use('/carts', cartRouter);
 router.use('/products', allProductRouter);
 
+const productRouter = require('./productRouter');
+const orderRouter = require('./orderRouter');
+
+router.use('/users', userRouter);
+router.use('/carts', cartRouter);
+router.use('/goods', productRouter);
+router.use('/orders', orderRouter);
+
+
 module.exports = router;
