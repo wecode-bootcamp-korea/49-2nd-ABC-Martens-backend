@@ -83,25 +83,13 @@ const addProductOrdersController = async (req, res, next) => {
   }
 };
 
-const getCheckoutController = async (req, res, next) => {
-  try {
-    const { id } = req.userData;
-  } catch (err) {
-    console.error(err);
-    next(err);
-  }
-};
 const checkoutSuccessController = async (req, res, next) => {
   try {
-    orderCheckoutService({ ...req.query });
-  } catch (err) {
-    console.error(err);
-    next(err);
-  }
-};
-const checkoutFailController = async (req, res, next) => {
-  try {
-    const { id } = req.userData;
+    const result = await orderCheckoutService({ ...req.query });
+    if (result.message === 'ok')
+      res.redirect(
+        `${process.env.CLIENT_URI}/orders/checkout/complete?orderNo=${result.orderNo}`,
+      );
   } catch (err) {
     console.error(err);
     next(err);
@@ -113,7 +101,5 @@ module.exports = {
   addOrderAddressController,
   addProductOrderController,
   addProductOrdersController,
-  getCheckoutController,
   checkoutSuccessController,
-  checkoutFailController,
 };

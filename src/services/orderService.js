@@ -24,7 +24,7 @@ const addProductOrderService = async (data) => {
 
 const addProductOrdersService = async (data) => {
   const orderNo = generateOrderNumber();
-  return productOrdersTransaction({ ...data, orderNo });
+  return await productOrdersTransaction({ ...data, orderNo });
 };
 
 const orderCheckoutService = async ({ paymentKey, orderId, amount }) => {
@@ -43,12 +43,15 @@ const orderCheckoutService = async ({ paymentKey, orderId, amount }) => {
       const { orderId, totalAmount, method } = resData;
       const data = { orderNo: orderId, priceAmount: totalAmount, method };
       orderCheckoutDao(data);
+      return {
+        message: 'ok',
+        orderId,
+      };
     })
     .catch((err) => {
       console.error(err);
       throwError(500, 'integration server error');
     });
-  return 'ok';
 };
 
 module.exports = {
