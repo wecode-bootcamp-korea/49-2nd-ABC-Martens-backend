@@ -14,7 +14,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/', indexRouter);
 
-
 //로그인
 app.post('/login', async (req, res) => {
   try {
@@ -44,7 +43,6 @@ app.post('/login', async (req, res) => {
     const hashPw = await bcrypt.compare(password, existingUser[0].password);
     console.log(hashPw);
 
-
     if (!hashPw) {
       const error = new Error('일치하는 회원정보가 없습니다');
       error.statusCode = 400;
@@ -52,7 +50,7 @@ app.post('/login', async (req, res) => {
       throw error;
     } //보안을 위해 비밀번호, 패스워드 중 오류 알려주지 않기로
 
-    // 로그인 성공 시 토큰 발급 
+    // 로그인 성공 시 토큰 발급
     const token = jwt.sign({ id: existingUser[0].id }, process.env.TYPEORM_JWT);
     return res.status(200).json({
       message: '로그인 성공하였습니다',
@@ -62,8 +60,6 @@ app.post('/login', async (req, res) => {
     console.log(error);
   }
 });
-
-
 
 app.use((req, _, next) => {
   const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
@@ -81,4 +77,3 @@ app.use((err, _, res, next) => {
 app.listen(app.get('port'), () => {
   console.log(`listening.... 🦻http://localhost:${app.get('port')}`);
 });
-
