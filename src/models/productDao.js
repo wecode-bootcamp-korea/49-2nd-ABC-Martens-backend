@@ -16,7 +16,7 @@ const introducer = async (id) => {
 
 const imageLoader = async (id) => {
   const imageViewer = await dataSource.query(
-    `SELECT detail_image_url, thumbnail_image_url thumbnail_image_url, is_thumbnail FROM product_images WHERE product_id = ${id}`,
+    `SELECT detail_image_url, thumbnail_image_url, is_thumbnail FROM product_images WHERE product_id = ${id}`,
   );
   return imageViewer;
 };
