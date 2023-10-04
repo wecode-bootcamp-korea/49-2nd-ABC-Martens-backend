@@ -34,7 +34,6 @@ app.post('/users', async (req, res) => {
       birthDate,
       phoneNumber,
       gender,
-      isCheckedMarketing,
       profileImage = '',
       provider,
     } = req.body;
@@ -95,7 +94,6 @@ app.post('/users', async (req, res) => {
       )
     VALUES (
       '${nickname}',
-      
       '${hashedPw}',
       '${birthDate}',
       '${email}', 
