@@ -18,6 +18,11 @@ const {
   orderCheckoutService,
 } = require('./orderService');
 
+const {
+  productSortService,
+  categoryCheckService,
+} = require('./allProductService');
+
 module.exports = {
   userService: {
     getUserIdByEmailService,
@@ -30,6 +35,9 @@ module.exports = {
     addProductCartService,
     addProductCartsService,
   },
+  allProductService: {
+    productSortService,
+    categoryCheckService,
   productService: {
     productReader,
   },

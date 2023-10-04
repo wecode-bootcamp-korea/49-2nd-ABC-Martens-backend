@@ -25,6 +25,9 @@ const colorLoader = productDao.colorLoader;
 const option = productDao.option;
 const imageLoader = productDao.imageLoader;
 
+const { productSortDao, categoryCheckDao } = require('./allProductDao');
+const { sortQueryBuilder, pageQueryBuilder } = require('./listenQueryBuilder');
+
 module.exports = {
   userDao: {
     getUserIdByEmailDao,
@@ -37,6 +40,17 @@ module.exports = {
     productCartTransaction,
     productCartsTransaction,
   },
+
+  allProductDao: {
+    productSortDao,
+    categoryCheckDao,
+  },
+  listenQueryBuilder: {
+    sortQueryBuilder,
+    pageQueryBuilder,
+  },
+  dataSource,
+
   productDao: {
     selector,
     introducer,

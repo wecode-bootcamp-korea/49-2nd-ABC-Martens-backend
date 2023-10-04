@@ -47,7 +47,9 @@ JWT_SECRET=
 ```yml
 DATABASE_URL="mysql://root:{root 비밀번호 - 설정하지 않았따면 콜론 채로 생략}@127.0.0.1:3306/ABCMartens"
 ```
+
 2. mysql cli 에서 `ABCMartens` 로컬 데이터베이스 생성
+
 ```bash
 CREATE DATABASE ABCMartens DEFAULT CHARACTER SET utf8mb4 DEFAULT COLLATE utf8mb4_general_ci
 ```
@@ -75,3 +77,5 @@ git pull origin dev
 ## Conventions
 
 본 `repository`는 커밋 컨벤션은 유다시티 커밋 컨벤션을 따릅니다.
+
+- 내용 : https://haesoo9410.tistory.com/300
