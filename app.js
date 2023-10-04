@@ -131,5 +131,5 @@ app.use((err, _, res, next) => {
 });
 
 app.listen(app.get('port'), () => {
-  console.log(`listening.... 🦻https://localhost:${app.get('port')}`);
+  console.log(`listening.... 🦻http://localhost:${app.get('port')}`);
 });
