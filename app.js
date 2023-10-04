@@ -1,6 +1,7 @@
 const express = require('express');
 const https = require('https');
 const fs = require('fs');
+const v4 = require('uuid4');
 const morgan = require('morgan');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
@@ -89,7 +90,7 @@ app.post('/users', async (req, res) => {
     INSERT INTO users (
       nickName, isCheckedMarketing                   
       password, birthDate,
-      email, phoneNumber, gender, profileImage, provider
+      email, phoneNumber, gender, profileImage, provider, uid
       )
     VALUES (
       '${nickname}',
@@ -100,7 +101,8 @@ app.post('/users', async (req, res) => {
       '${phoneNumber}',
       '${gender}',
       '${profileImage}',
-      '${provider}'
+      '${provider}',
+      '${v4()}
       )
     `);
 
