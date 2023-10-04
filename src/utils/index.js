@@ -58,3 +58,16 @@ exports.throwError = (code, message) => {
   error.status = code;
   throw error;
 };
+
+/**
+ * @function generateOrderNumber - 주문번호 생성 함수
+ * @returns string
+ */
+exports.generateOrderNumber = () => {
+  const date = new Date();
+  const dateString = date.toISOString().split('T')[0].replace(/-/g, '');
+  const serialNumber = (Math.floor(Math.random() * 9000) + 1000)
+    .toString()
+    .padStart(4, '0');
+  return '0' + dateString + serialNumber;
+};
