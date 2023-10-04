@@ -26,6 +26,7 @@ app.use('/', indexRouter);
 // 회원가입
 app.post('/users', async (req, res) => {
   try {
+    console.log(1);
     const {
       nickname,
       password,
@@ -38,6 +39,7 @@ app.post('/users', async (req, res) => {
       provider,
     } = req.body;
 
+    console.log(req.body);
     // key error (필수, 입력 정보 없을 경우)
     if (
       !nickname ||
@@ -87,13 +89,13 @@ app.post('/users', async (req, res) => {
     // DB에 회원정보 저장
     const addUser = await myDataSource.query(`
     INSERT INTO users (
-      nickName, isCheckedMarketing                   
-      password, birthDate,
-      email, phoneNumber, gender, profileImage, provider
+      nickname,                   
+      password, birth_date,
+      email, phone_number, gender, profile_image, provider
       )
     VALUES (
       '${nickname}',
-      '${isCheckedMarketing}',
+      
       '${hashedPw}',
       '${birthDate}',
       '${email}', 
