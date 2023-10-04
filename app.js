@@ -90,7 +90,7 @@ app.post('/users', async (req, res) => {
     const addUser = await myDataSource.query(`
     INSERT INTO users (
       nickname,                   
-      password, birth_date,
+      password, birth_date, 
       email, phone_number, gender, profile_image, provider
       )
     VALUES (
