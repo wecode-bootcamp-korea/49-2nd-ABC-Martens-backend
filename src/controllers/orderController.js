@@ -101,7 +101,5 @@ module.exports = {
   addOrderAddressController,
   addProductOrderController,
   addProductOrdersController,
-  getCheckoutController,
   checkoutSuccessController,
-  checkoutFailController,
 };
