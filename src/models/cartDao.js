@@ -15,7 +15,8 @@ const getProductByUserIdDao = async (id) => {
       products.price AS price,
       product_images.thumbnail_image_url AS productThumbnail,
       options.size,
-      product_carts.quantity
+      product_carts.quantity, 
+      product_carts.product_option_id AS productOptionId
     FROM 
       products
     LEFT JOIN
@@ -29,6 +30,7 @@ const getProductByUserIdDao = async (id) => {
           `,
     [id],
   );
+  console.log(result);
   return result;
 };
 
