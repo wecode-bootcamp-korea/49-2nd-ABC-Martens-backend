@@ -9,6 +9,13 @@ const {
   addProductCartService,
   addProductCartsService,
 } = require('./cartService');
+const {
+  getOrderAddressService,
+  addOrderAddressService,
+  addProductOrderService,
+  addProductOrdersService,
+  orderCheckoutService,
+} = require('./orderService');
 
 const {
   productSortService,
@@ -27,8 +34,16 @@ module.exports = {
     addProductCartService,
     addProductCartsService,
   },
+
   allProductService: {
     productSortService,
     categoryCheckService,
+  },
+  orderService: {
+    getOrderAddressService,
+    addOrderAddressService,
+    addProductOrderService,
+    addProductOrdersService,
+    orderCheckoutService,
   },
 };

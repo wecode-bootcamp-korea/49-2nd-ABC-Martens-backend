@@ -1,14 +1,23 @@
 const { dataSource } = require('./dataSource');
+
 const {
   getUserIdByEmailDao,
   createUserDao,
   setNewPasswordDao,
+  getUserUidByOrderNumberQuery,
 } = require('./userDao');
 const {
   getProductByUserIdDao,
   productCartTransaction,
   productCartsTransaction,
 } = require('./cartDao');
+const {
+  getOrderAddressByUserId,
+  addOrderAddress,
+  productOrderTransaction,
+  productOrdersTransaction,
+  orderCheckoutDao,
+} = require('./orderDao');
 
 const { productSortDao, categoryCheckDao } = require('./allProductDao');
 const { sortQueryBuilder, pageQueryBuilder } = require('./listenQueryBuilder');
@@ -18,12 +27,14 @@ module.exports = {
     getUserIdByEmailDao,
     createUserDao,
     setNewPasswordDao,
+    getUserUidByOrderNumberQuery,
   },
   cartDao: {
     getProductByUserIdDao,
     productCartTransaction,
     productCartsTransaction,
   },
+
   allProductDao: {
     productSortDao,
     categoryCheckDao,
@@ -31,6 +42,13 @@ module.exports = {
   listenQueryBuilder: {
     sortQueryBuilder,
     pageQueryBuilder,
+  },
+  orderDao: {
+    getOrderAddressByUserId,
+    addOrderAddress,
+    productOrderTransaction,
+    productOrdersTransaction,
+    orderCheckoutDao,
   },
   dataSource,
 };
