@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
+const { dataSource: myDataSource } = require('./src/models/dataSource');
 
 require('dotenv').config();
 
