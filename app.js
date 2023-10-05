@@ -17,7 +17,7 @@ app.set('port', process.env.PORT || 8000);
 app.use(
   cors({
     origin: '*',
-    credentials: true,
+    credentials: true
   }),
 );
 app.use(morgan('dev'));
@@ -41,7 +41,7 @@ app.post('/users', async (req, res) => {
       phoneNumber,
       gender,
       profileImage = '',
-      provider,
+      provider, 
     } = req.body;
 
     console.log(req.body);
@@ -184,7 +184,6 @@ app.use((err, _, res, next) => {
 
 app.listen(
   app.get('port'),
-  process.env.NODE === 'production' ? '0.0.0.0' : 'localhost',
   () => {
     console.log(`server is running`);
   },
