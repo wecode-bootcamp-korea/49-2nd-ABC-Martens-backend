@@ -17,7 +17,7 @@ app.set('port', process.env.PORT || 8000);
 app.use(
   cors({
     origin: '*',
-    credentials: true,
+    credentials: true
   }),
 );
 app.use(morgan('dev'));
@@ -28,6 +28,99 @@ app.get('/', (req, res) => {
   res.status(200).send('OK');
 });
 app.use('/', indexRouter);
+
+// 회원가입
+app.post('/users', async (req, res) => {
+  try {
+    console.log(1);
+    const {
+      nickname,
+      password,
+      email,
+      birthDate,
+      phoneNumber,
+      gender,
+      profileImage = '',
+      provider, 
+    } = req.body;
+
+    console.log(req.body);
+    // key error (필수, 입력 정보 없을 경우)
+    if (
+      !nickname ||
+      !password ||
+      !birthDate ||
+      !email ||
+      !phoneNumber ||
+      !gender
+    ) {
+      const error = new Error('KEY_ERROR');
+      error.statusCode = 400;
+      throw error;
+    }
+
+    // 이메일 중복 확인, 있으면 에러
+    const existingUser = await myDataSource.query(`
+    SELECT id, email FROM users WHERE email='${email}';
+    `);
+
+    console.log('existing user:', existingUser);
+    if (existingUser.length > 0) {
+      const error = new Error('이미 존재하는 사용자입니다'); //보안 위해, 이메일 중복임을 밝히지 않음
+      error.statusCode = 400;
+      throw error;
+    }
+
+    // email . @ 필수 포함 정규식
+    const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+
+    if (!emailRegex.test(email)) {
+      const error = new Error('유효하지 않은 이메일 주소 형식입니다.');
+      error.statusCode = 400;
+      throw error;
+    }
+
+    // 비밀번호 8자리 이상
+    if (password.length < 8) {
+      const error = new Error('패스워드는 8자리 이상이어야 합니다');
+      error.statusCode = 400;
+      throw error;
+    }
+
+    // DB 저장 전 비밀번호 해시화
+    const saltRounds = 10;
+    const hashedPw = await bcrypt.hash(password, saltRounds);
+
+    // DB에 회원정보 저장
+    await myDataSource.query(`
+    INSERT INTO users (
+      nickname,                   
+      password, birth_date, 
+      email, phone_number, gender, profile_image, provider, uid
+      )
+    VALUES (
+      '${nickname}',
+      '${hashedPw}',
+      '${birthDate}',
+      '${email}', 
+      '${phoneNumber}',
+      '${gender}',
+      '${profileImage}',
+      '${provider}',
+      '${v4()}'
+      )
+    `);
+
+    return res.status(201).json({
+      message: '회원가입이 완료되었습니다',
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(error.statusCode).json({
+      message: '회원가입에 실패하였습니다',
+    });
+  }
+});
 
 //로그인
 app.post('/login', async (req, res) => {
@@ -91,7 +184,6 @@ app.use((err, _, res, next) => {
 
 app.listen(
   app.get('port'),
-  // process.env.NODE === 'production' ? '0.0.0.0' : 'localhost',
   () => {
     console.log(`server is running`);
   },
