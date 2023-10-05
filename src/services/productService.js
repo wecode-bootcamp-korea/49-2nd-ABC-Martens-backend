@@ -3,13 +3,16 @@ const { throwError } = require('../utils');
 const { selector, introducer, imageLoader, option, price, detailImageLoader, colors, productSaved } = productDao;
 
 const productReader = async (id) => {
-  const productChecker = productDao.productSaved[0]; //araylength
-  if (!productChecker) {
-    return { message : "undefined" };
+  const productChecker = await productDao.productSaved(id);
+  const productChecked = productChecker[0];
+  console.log(productChecked)
+  if (!productChecked) {
+    return { message : "undefined" }
   }
   try {
     const productIntroducer = await productDao.introducer(id);
       const productId = productIntroducer[0].id;
+      
       const productName = productIntroducer[0].product_name;
       const price = productIntroducer[0].price;
       const orignialPrice = productIntroducer[0].original_price;
@@ -35,6 +38,8 @@ const productReader = async (id) => {
       isThumbnail,
       options: optionSelector,
     };
+
+    return data;
 
   } catch (err) {
     console.error(err);

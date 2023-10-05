@@ -2,11 +2,11 @@ const { dataSource } = require('./dataSource');
 const { throwError } = require('../utils');
 
 const productSaved = async (id) => {
-  const productViewer = await dataSource.query(
-    `SELECT id FROM products WHERE id = ${id}`,
+  const productCheck = await dataSource.query(
+    `SELECT id FROM products WHERE id = ${id}`
   );
-  const productCheck = productViewer[0];
-  return productViewer;
+  console.log(productCheck)
+  return productCheck;
 }
 
 const introducer = async (id) => {

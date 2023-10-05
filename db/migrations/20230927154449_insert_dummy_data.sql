@@ -1,6 +1,4 @@
 -- migrate:up
-
-
 INSERT INTO users (email, birth_date, gender, is_checked_marketing, password, nickname, phone_number, profile_image, provider, uid)
  VALUES ('alfma123@naver.com', '19900101', 'female', 0, '123123', '이현진', '010-000-0000', 'http://k.kakaocdn.net/dn/Q3EJK/btsjlFw0vAg/LM3akK9uh12mHUnavwbD4k/img_640x640.jpg', 'none', 'none')
  , ('kimsw@gmail.com', '19940312', 'male', 0, 'hello', '김승원', '010-1234-1234', '', 'none', 'none2')
@@ -31,7 +29,6 @@ INSERT INTO product_images (id, product_id, detail_image_url, thumbnail_image_ur
 ,(10, 10, "https://www.drmartens.co.kr/data/goods/1/2022/11/3270_temp_16684161331068view.jpg", 'https://www.drmartens.co.kr/data/goods/1/2022/11/3270_temp_16684161331068list1.jpg', 0);
 
 INSERT INTO colors (id, color) VALUES (1, 'black');
-INSERT INTO colors (color) VALUES ('brown’);
 
 INSERT INTO options (id, product_id, color_id, quantity, size) VALUES (1, 1, 1, 100, 220)
 , (2, 1, 1, 100, 230)
