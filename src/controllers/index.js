@@ -17,6 +17,8 @@ const {
   checkoutSuccessController,
 } = require('./orderController');
 
+const { allProduct } = require('./allProductController');
+
 module.exports = {
   userController: {
     socialLoginController,
@@ -27,6 +29,9 @@ module.exports = {
     getCartProductByUserIdController,
     addProductCartController,
     addProductCartsController,
+  },
+  allProductController: {
+    allProduct,
   },
   orderController: {
     getOrderAddressController,

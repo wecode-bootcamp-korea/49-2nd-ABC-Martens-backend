@@ -26,6 +26,7 @@ const getCartProductByUserIdController = async (req, res, next) => {
 const addProductCartController = async (req, res, next) => {
   try {
     const { id } = req.userData;
+    const method = req.method;
     const { productId } = req.params;
     const { color, quantity, size } = req.body;
     if (!productId || !color || !quantity || !size)
@@ -34,6 +35,7 @@ const addProductCartController = async (req, res, next) => {
       id,
       productId,
       ...req.body,
+      method,
     });
     if (message === 'ok') {
       return res.status(201).json({ message: 'product added' });
@@ -47,12 +49,13 @@ const addProductCartController = async (req, res, next) => {
 const addProductCartsController = async (req, res, next) => {
   try {
     const { id } = req.userData;
+    const method = req.method;
     const { productList } = req.body;
     if (isEmpty(productList)) throwError(400, 'key error');
     const { productId, size, quantity, color } = productList[0];
     if (!productId || !size || !quantity || !color)
       throwError(400, 'key error');
-    const message = await addProductCartsService({ id, ...req.body });
+    const message = await addProductCartsService({ id, ...req.body, method });
     if (message === 'ok') {
       return res.status(201).json({ message: 'product added' });
     }
