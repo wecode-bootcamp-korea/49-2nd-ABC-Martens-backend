@@ -9,6 +9,8 @@ const productReader = async (id) => {
       const productName = productIntroducer[0].product_name;
       const price = productIntroducer[0].price;
       const orignialPrice = productIntroducer[0].original_price;
+      const productDescription = productIntroducer[0].products_description;
+      const salesPercentage = price/orignialPrice;
     const imageSelector = await productDao.imageLoader(id);
       const detailImageUrl = imageSelector[0].detail_image_url;
       const thumbnailImageUrl =imageSelector[0].thumbnail_image_url;
@@ -20,6 +22,8 @@ const productReader = async (id) => {
       productName,
       price,
       orignialPrice,
+      salesPercentage,
+      productDescription,
       detailImageUrl,
       thumbnailImageUrl,
       isThumbnail,
