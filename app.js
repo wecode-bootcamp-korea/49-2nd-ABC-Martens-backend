@@ -5,7 +5,7 @@ const v4 = require('uuid4');
 const morgan = require('morgan');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
-const jwt = require("jsonwebtoken");
+const jwt = require('jsonwebtoken');
 const { dataSource: myDataSource } = require('./src/models/dataSource');
 
 require('dotenv').config();
@@ -88,11 +88,11 @@ app.post('/users', async (req, res) => {
     const hashedPw = await bcrypt.hash(password, saltRounds);
 
     // DB에 회원정보 저장
-    const addUser = await myDataSource.query(`
+    await myDataSource.query(`
     INSERT INTO users (
       nickname,                   
       password, birth_date, 
-      email, phone_number, gender, profile_image, provider
+      email, phone_number, gender, profile_image, provider, uid
       )
     VALUES (
       '${nickname}',
@@ -103,7 +103,7 @@ app.post('/users', async (req, res) => {
       '${gender}',
       '${profileImage}',
       '${provider}',
-      '${v4()}
+      '${v4()}'
       )
     `);
 
