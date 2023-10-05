@@ -23,6 +23,10 @@ app.use(
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.get('/', (req, res) => {
+  res.status(200).send('OK');
+});
 app.use('/', indexRouter);
 
 //로그인
@@ -85,6 +89,10 @@ app.use((err, _, res, next) => {
   });
 });
 
-app.listen(app.get('port'), () => {
-  console.log(`listening.... 🦻http://localhost:${app.get('port')}`);
-});
+app.listen(
+  app.get('port'),
+  process.env.NODE === 'production' ? '0.0.0.0' : 'localhost',
+  () => {
+    console.log(`server is running`);
+  },
+);
