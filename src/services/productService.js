@@ -1,6 +1,6 @@
 const productDao = require('../models/productDao');
 const { throwError } = require('../utils');
-const { selector, introducer, imageLoader, option, price } = productDao;
+const { selector, introducer, imageLoader, option, price, detailImageLoader, colors } = productDao;
 
 const productReader = async (id) => {
   try {
@@ -10,21 +10,26 @@ const productReader = async (id) => {
       const price = productIntroducer[0].price;
       const orignialPrice = productIntroducer[0].original_price;
       const productDescription = productIntroducer[0].products_description;
-      const salesPercentage = price/orignialPrice;
+      const salesPercentage = ((1 - price/orignialPrice)*100);
+      const salesPricePercentage = Math.round(salesPercentage);
     const imageSelector = await productDao.imageLoader(id);
-      const detailImageUrl = imageSelector[0].detail_image_url;
       const thumbnailImageUrl =imageSelector[0].thumbnail_image_url;
-      const isThumbnail = imageSelector[0].is_thumb_nail
+      const isThumbnail = imageSelector[0].is_thumbnail;
     const optionSelector = await productDao.option(id);
+    const colorSelector = await productDao.colors(id);
+    // const colorsName = optionSelector[0].colorName;
+      // const colorNumber = optionSelector[0].color_id;
+    const detailImageSelector = await productDao.detailImageLoader(id); 
 
     const data = {
       productId,
       productName,
+      colorSelector,
       price,
       orignialPrice,
-      salesPercentage,
+      salesPricePercentage,
       productDescription,
-      detailImageUrl,
+      detailImageSelector,
       thumbnailImageUrl,
       isThumbnail,
       options: optionSelector,

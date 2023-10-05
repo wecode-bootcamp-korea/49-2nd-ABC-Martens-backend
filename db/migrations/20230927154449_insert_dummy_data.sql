@@ -1,9 +1,10 @@
 -- migrate:up
 
 
-INSERT INTO users (email, birth_date, gender, is_checked_marketing, password, nickname, phone_number, profile_image, provider)
- VALUES ('alfma123@naver.com', '19900101', 'female', 0, '123123', '이현진', '010-000-0000', 'http://k.kakaocdn.net/dn/Q3EJK/btsjlFw0vAg/LM3akK9uh12mHUnavwbD4k/img_640x640.jpg', 'none')
-, ('pkj6@naver.com', '19191212', 'male', 0, '321321', '박경재', '010-0101-1010', 'https://cdn3.iconfinder.com/data/icons/logos-and-brands-adobe/512/141_Git-1024.png', 'none');
+INSERT INTO users (email, birth_date, gender, is_checked_marketing, password, nickname, phone_number, profile_image, provider, uid)
+ VALUES ('alfma123@naver.com', '19900101', 'female', 0, '123123', '이현진', '010-000-0000', 'http://k.kakaocdn.net/dn/Q3EJK/btsjlFw0vAg/LM3akK9uh12mHUnavwbD4k/img_640x640.jpg', 'none', 'none')
+ , ('kimsw@gmail.com', '19940312', 'male', 0, 'hello', '김승원', '010-1234-1234', '', 'none', 'none2')
+, ('pkj6@naver.com', '19191212', 'male', 0, '321321', '박경재', '010-0101-1010', 'https://cdn3.iconfinder.com/data/icons/logos-and-brands-adobe/512/141_Git-1024.png', 'none', 'none3');
 
 INSERT INTO products (id, category_id, sub_category_id, product_name, price, original_price, products_description)
  VALUES (1, 1, 1, '1461 모노', 170000, 210000, '추가 정보\n제품 소재 : SMOOTH/천연가죽(소가죽)\n색상 : BLACK\n치수 : UK 사이즈 기준(mm표기)/ 신발에 따라 사이즈 상이하니 구매 후기 참고\n제조자 : Dr. Martens\n제조국 : 태국 외 기타국가(택 참조)\n세탁방법 및 취급시 주의사항 : 일반 가죽은 마른 헝겊으로 먼지를 털어낸 후 원더발삼으로 관리합니다. 적당한 온도와 습도에서 가죽 제품 속에 보형물을 넣고 형태를 유지시키면서 보관해주세요. 스웨이드/누벅/화이트 색상 가죽은 발삼 사용을 제한합니다. 가죽 제품인 경우 젖었을 때 통풍이 잘 되는 그늘에서 건조해주세요. 습기, 수분, 강한 열, 기름기 있는 곳에서의 착용은 가죽 제품의 형태를 변화시킬 수 있으니 주의하여 주세요. 천연가죽 내피가 사용된 제품은 가죽 컬러의 물감이 배어 나오는 경우가 있으므로 주의하여 주세요. 가죽 제품인 경우 여름철 자동차의 트렁크나 차내, 고온다습한 장소에 방치하지 말아주세요.\n제조연월 : 소비자피해보상규정에 따름\n품질보증기준 : 1544-6486(내선2번), 전국 매장 유/무상 A/S\A/S 책임자와 전화번호 :\n취급 시 주의사항 : 자세한 내용은 ‘자세히 보기’를 클릭하여 확인 바랍니다.\n할인코드\n[HB0930] 20% 할인(최대 200,000₩)')
