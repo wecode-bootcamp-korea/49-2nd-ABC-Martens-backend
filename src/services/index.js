@@ -38,6 +38,7 @@ module.exports = {
   allProductService: {
     productSortService,
     categoryCheckService,
+  },
   productService: {
     productReader,
   },

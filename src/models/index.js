@@ -40,7 +40,6 @@ module.exports = {
     productCartTransaction,
     productCartsTransaction,
   },
-
   allProductDao: {
     productSortDao,
     categoryCheckDao,
@@ -49,8 +48,6 @@ module.exports = {
     sortQueryBuilder,
     pageQueryBuilder,
   },
-  dataSource,
-
   productDao: {
     selector,
     introducer,
