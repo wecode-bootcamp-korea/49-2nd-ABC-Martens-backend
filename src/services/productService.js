@@ -1,4 +1,5 @@
 const productDao = require('../models/productDao');
+const { throwError } = require('../utils');
 const { selector, introducer, imageLoader, option, price } = productDao;
 
 const productReader = async (id) => {

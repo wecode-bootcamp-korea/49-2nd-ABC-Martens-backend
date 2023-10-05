@@ -1,4 +1,5 @@
 const { dataSource } = require('./dataSource');
+const { throwError } = require('../utils');
 
 const selector = async (id) => {
   try {

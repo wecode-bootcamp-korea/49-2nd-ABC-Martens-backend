@@ -1,5 +1,7 @@
 const { generateToken, throwError } = require('../utils');
+const { throwError } = require('../utils');
 const productService = require('../services/productService');
+
 
 const detail = async (req, res) => {
   try {
