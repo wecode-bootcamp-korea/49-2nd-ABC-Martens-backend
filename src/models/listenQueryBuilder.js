@@ -8,22 +8,23 @@
 const sortQueryBuilder = async (sub_category_id, category_id, sortBy) => {
   try {
     const orderingSortWhereBuilder = {
-      ranking: `WHERE sub_category_id = ${sub_category_id} GROUP BY products.id`,
-      regist: `WHERE sub_category_id = ${sub_category_id}`,
-      low_price: `WHERE sub_category_id = ${sub_category_id}`,
-      high_price: `WHERE sub_category_id = ${sub_category_id}`,
-      review: `WHERE sub_category_id = ${sub_category_id} GROUP BY products.id`,
-      sale: `WHERE sub_category_id = ${sub_category_id}`,
+      // ranking: `WHERE sub_category_id = ${sub_category_id} GROUP BY products.id`,
+      ranking: `WHERE sub_category_id = ${sub_category_id} GROUP BY products.id, options.color_id, op.optionCheck`,
+      regist: `WHERE sub_category_id = ${sub_category_id} GROUP BY products.id, options.color_id, op.optionCheck`,
+      low_price: `WHERE sub_category_id = ${sub_category_id} GROUP BY products.id, options.color_id, op.optionCheck`,
+      high_price: `WHERE sub_category_id = ${sub_category_id} GROUP BY products.id, options.color_id, op.optionCheck`,
+      review: `WHERE sub_category_id = ${sub_category_id} GROUP BY products.id, options.color_id, op.optionCheck`,
+      sale: `WHERE sub_category_id = ${sub_category_id} GROUP BY products.id, options.color_id, op.optionCheck`,
       '': '',
     };
 
     if (!sub_category_id) {
-      orderingSortWhereBuilder.ranking = `WHERE category_id = ${category_id} GROUP BY products.id`;
-      orderingSortWhereBuilder.regist = `WHERE category_id = ${category_id}`;
-      orderingSortWhereBuilder.low_price = `WHERE category_id = ${category_id}`;
-      orderingSortWhereBuilder.high_price = `WHERE category_id = ${category_id}`;
-      orderingSortWhereBuilder.review = `WHERE category_id = ${category_id} GROUP BY products.id`;
-      orderingSortWhereBuilder.sale = `WHERE category_id = ${category_id}`;
+      orderingSortWhereBuilder.ranking = `WHERE category_id = ${category_id} GROUP BY products.id, options.color_id, op.optionCheck`;
+      orderingSortWhereBuilder.regist = `WHERE category_id = ${category_id} GROUP BY products.id, options.color_id, op.optionCheck`;
+      orderingSortWhereBuilder.low_price = `WHERE category_id = ${category_id} GROUP BY products.id, options.color_id, op.optionCheck`;
+      orderingSortWhereBuilder.high_price = `WHERE category_id = ${category_id} GROUP BY products.id, options.color_id, op.optionCheck`;
+      orderingSortWhereBuilder.review = `WHERE category_id = ${category_id} GROUP BY products.id, options.color_id, op.optionCheck`;
+      orderingSortWhereBuilder.sale = `WHERE category_id = ${category_id} GROUP BY products.id, options.color_id, op.optionCheck`;
     }
 
     const orderingSortWhere = await orderingSortWhereBuilder[sortBy];
@@ -41,23 +42,104 @@ const sortQueryBuilder = async (sub_category_id, category_id, sortBy) => {
     const orderingSortOrderBy = await orderingSortOrderByBuilder[sortBy];
 
     const productSort = {
-      ranking: `, ROUND(AVG(rate), 1) AS rating
-    FROM products LEFT JOIN reviews ON products.id = reviews.product_id ${orderingSortWhere} ${orderingSortOrderBy}`,
-      regist: `FROM products ${orderingSortWhere} ${orderingSortOrderBy}`,
-      low_price: `FROM products ${orderingSortWhere} ${orderingSortOrderBy}`,
-      high_price: `FROM products ${orderingSortWhere} ${orderingSortOrderBy}`,
-      review: `, COUNT(content) AS review 
-    FROM products LEFT JOIN reviews ON products.id = reviews.product_id ${orderingSortWhere} ${orderingSortOrderBy}`,
-      sale: `, IFNULL(amount_sales, 0) AS total_sales
-    FROM products
-    LEFT JOIN (SELECT po.product_option_id, SUM(po.product_quantity) AS amount_sales
-    FROM product_orders AS po
-    INNER JOIN orders AS o ON o.id = po.order_id
-    WHERE o.order_status = 'purchased'
-    GROUP BY po.product_option_id) AS po_result ON products.id = po_result.product_option_id
-    ${orderingSortWhere}
-    GROUP BY products.id
-    ${orderingSortOrderBy}`,
+      // ranking: `, ROUND(AVG(rate), 1) AS rating, MAX(product_images.thumbnail_image_url) AS productThumbnail
+      // FROM products
+      // LEFT JOIN reviews ON products.id = reviews.product_id
+      // LEFT JOIN product_images ON products.id = product_images.product_id ${orderingSortWhere} ${orderingSortOrderBy}`,
+      ranking: `, ROUND(AVG(rate), 1) AS rating, MAX(product_images.thumbnail_image_url) AS productThumbnail, options.color_id AS optionId, op.optionCheck
+      FROM products
+      LEFT JOIN reviews ON products.id = reviews.product_id
+      LEFT JOIN product_images ON products.id = product_images.product_id
+      LEFT JOIN options ON products.id = options.product_id
+      LEFT JOIN (SELECT product_id, color_id, colors.color AS color,
+      JSON_ARRAYAGG(
+      JSON_OBJECT('size', options.size,
+      'quantity', options.quantity) 
+      ) AS optionCheck
+      FROM options
+      LEFT JOIN colors ON options.color_id = colors.id
+      GROUP BY product_id, color_id, colors.color) AS op ON products.id = op.product_id ${orderingSortWhere} ${orderingSortOrderBy}`,
+      // regist: `, MAX(product_images.thumbnail_image_url) AS productThumbnail
+      // FROM products
+      // LEFT JOIN product_images ON products.id = product_images.product_id ${orderingSortWhere} ${orderingSortOrderBy}`,
+      regist: `, MAX(product_images.thumbnail_image_url) AS productThumbnail, options.color_id AS optionId, op.optionCheck
+      FROM products
+      LEFT JOIN product_images ON products.id = product_images.product_id
+      LEFT JOIN options ON products.id = options.product_id
+      LEFT JOIN (SELECT product_id, color_id, colors.color AS color,
+      JSON_ARRAYAGG(
+      JSON_OBJECT('size', options.size,
+      'quantity', options.quantity) 
+      ) AS optionCheck
+      FROM options
+      LEFT JOIN colors ON options.color_id = colors.id
+      GROUP BY product_id, color_id, colors.color) AS op ON products.id = op.product_id ${orderingSortWhere} ${orderingSortOrderBy}`,
+      // low_price: `, MAX(product_images.thumbnail_image_url) AS productThumbnail
+      // FROM products
+      // LEFT JOIN product_images ON products.id = product_images.product_id ${orderingSortWhere} ${orderingSortOrderBy}`,
+      // high_price: `, MAX(product_images.thumbnail_image_url) AS productThumbnail
+      // FROM products
+      // LEFT JOIN product_images ON products.id = product_images.product_id ${orderingSortWhere} ${orderingSortOrderBy}`,
+      low_price: `, MAX(product_images.thumbnail_image_url) AS productThumbnail, options.color_id AS optionId, op.optionCheck
+      FROM products
+      LEFT JOIN product_images ON products.id = product_images.product_id 
+      LEFT JOIN options ON products.id = options.product_id
+      LEFT JOIN (SELECT product_id, color_id, colors.color AS color,
+      JSON_ARRAYAGG(
+      JSON_OBJECT('size', options.size,
+      'quantity', options.quantity) 
+      ) AS optionCheck
+      FROM options
+      LEFT JOIN colors ON options.color_id = colors.id
+      GROUP BY product_id, color_id, colors.color) AS op ON products.id = op.product_id ${orderingSortWhere} ${orderingSortOrderBy}`,
+      high_price: `, MAX(product_images.thumbnail_image_url) AS productThumbnail, options.color_id AS optionId, op.optionCheck
+      FROM products
+      LEFT JOIN product_images ON products.id = product_images.product_id 
+      LEFT JOIN options ON products.id = options.product_id
+      LEFT JOIN (SELECT product_id, color_id, colors.color AS color,
+      JSON_ARRAYAGG(
+      JSON_OBJECT('size', options.size,
+      'quantity', options.quantity) 
+      ) AS optionCheck
+      FROM options
+      LEFT JOIN colors ON options.color_id = colors.id
+      GROUP BY product_id, color_id, colors.color) AS op ON products.id = op.product_id ${orderingSortWhere} ${orderingSortOrderBy}`,
+      // review: `, COUNT(content) AS review, MAX(product_images.thumbnail_image_url) AS productThumbnail
+      // FROM products
+      // LEFT JOIN reviews ON products.id = reviews.product_id
+      // LEFT JOIN product_images ON products.id = product_images.product_id ${orderingSortWhere} ${orderingSortOrderBy}`,
+      review: `, COUNT(content) AS review, MAX(product_images.thumbnail_image_url) AS productThumbnail, options.color_id AS optionId, op.optionCheck
+      FROM products
+      LEFT JOIN reviews ON products.id = reviews.product_id
+      LEFT JOIN product_images ON products.id = product_images.product_id 
+      LEFT JOIN options ON products.id = options.product_id
+      LEFT JOIN (SELECT product_id, color_id, colors.color AS color,
+      JSON_ARRAYAGG(
+      JSON_OBJECT('size', options.size,
+      'quantity', options.quantity) 
+      ) AS optionCheck
+      FROM options
+      LEFT JOIN colors ON options.color_id = colors.id
+      GROUP BY product_id, color_id, colors.color) AS op ON products.id = op.product_id ${orderingSortWhere} ${orderingSortOrderBy}`,
+      sale: `, IFNULL(amount_sales, 0) AS total_sales, MAX(product_images.thumbnail_image_url) AS productThumbnail, options.color_id AS optionId, op.optionCheck
+      FROM products
+      LEFT JOIN (SELECT po.product_option_id, SUM(po.product_quantity) AS amount_sales
+      FROM product_orders AS po
+      INNER JOIN orders AS o ON o.id = po.order_id
+      WHERE o.order_status = 'purchased'
+      GROUP BY po.product_option_id) AS po_result ON products.id = po_result.product_option_id
+      LEFT JOIN product_images ON products.id = product_images.product_id
+      LEFT JOIN options ON products.id = options.product_id
+      LEFT JOIN (SELECT product_id, color_id, colors.color AS color,
+      JSON_ARRAYAGG(
+      JSON_OBJECT('size', options.size,
+      'quantity', options.quantity) 
+      ) AS optionCheck
+      FROM options
+      LEFT JOIN colors ON options.color_id = colors.id
+      GROUP BY product_id, color_id, colors.color) AS op ON products.id = op.product_id 
+      ${orderingSortWhere}
+      ${orderingSortOrderBy}`,
       '': '',
     };
 
