@@ -31,7 +31,7 @@ INSERT INTO product_images (id, product_id, detail_image_url, thumbnail_image_ur
 ,(10, 10, "https://www.drmartens.co.kr/data/goods/1/2022/11/3270_temp_16684161331068view.jpg", 'https://www.drmartens.co.kr/data/goods/1/2022/11/3270_temp_16684161331068list1.jpg', 0);
 
 INSERT INTO colors (id, color) VALUES (1, 'black');
-
+INSERT INTO colors (color) VALUES ('brown’);
 
 INSERT INTO options (id, product_id, color_id, quantity, size) VALUES (1, 1, 1, 100, 220)
 , (2, 1, 1, 100, 230)
