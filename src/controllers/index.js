@@ -32,7 +32,7 @@ module.exports = {
   },
   allProductController: {
     allProduct,
-
+  },
   orderController: {
     getOrderAddressController,
     addOrderAddressController,
@@ -42,6 +42,5 @@ module.exports = {
   },
   productController: {
     productController,
-
   },
 };
