@@ -3,8 +3,7 @@ const { dataSource } = require('./dataSource');
 
 const getProductByUserIdDao = async (id) => {
   const result = await dataSource.query(
-    ` 
-      SELECT 
+    ` SELECT 
       products.id AS productId, 
       products.product_name AS productName,
       products.price * COALESCE(product_carts.quantity, 1) AS totalPrice,
@@ -29,12 +28,21 @@ const getProductByUserIdDao = async (id) => {
     LEFT JOIN 
       product_carts ON options.id = product_carts.product_option_id  
     LEFT JOIN users ON product_carts.user_id = users.id
-    WHERE users.id = ? AND (product_carts.is_deleted IS NULL OR product_carts.is_deleted != 1);
+    WHERE users.id = ? AND (product_carts.is_deleted IS NULL OR product_carts.is_deleted != 1)
+    ORDER BY product_carts.updated_at ASC
           `,
     [id],
   );
   return result;
 };
+
+const addProductToCartQuery = `
+    quantity = VALUES(quantity) + product_carts.quantity,
+  `;
+
+const updateProductInCartQuery = `
+    quantity = VALUES(quantity),
+`;
 
 /**
  * @function productCartTransaction - 장바구니에 단일 상품 추가/수정시 발생하는 트랜잭션 함수
@@ -44,10 +52,12 @@ const getProductByUserIdDao = async (id) => {
 const productCartTransaction = async ({
   id,
   productId,
+  productOptionId,
   size,
   quantity,
   color,
   isDeleted,
+  method,
 }) => {
   const queryRunner = dataSource.createQueryRunner();
   await queryRunner.connect();
@@ -63,19 +73,22 @@ const productCartTransaction = async ({
       [productId, colorId.id, parseInt(size)],
     );
 
+    if (method === 'PATCH' && productOptionId) {
+      await queryRunner.query(
+        `UPDATE product_carts SET is_deleted = 1  WHERE product_option_id = ?
+        `,
+        [productOptionId],
+      );
+    }
     const sql = `
     INSERT INTO product_carts (user_id, product_option_id, quantity, is_deleted, deleted_at)
     VALUES (?, ?, ?, ?, ${isDeleted === 'Y' ? 'CURRENT_TIMESTAMP' : null})
     ON DUPLICATE KEY UPDATE 
-      quantity = VALUES(quantity) + product_carts.quantity,
+      ${method === 'POST' ? addProductToCartQuery : updateProductInCartQuery},
       is_deleted = VALUES(is_deleted);    
     `;
-    await queryRunner.query(sql, [
-      id,
-      optionId.id,
-      quantity,
-      isDeleted === 'Y' ? 1 : null,
-    ]);
+
+    await queryRunner.query(sql, [id, optionId.id, quantity, isDeleted]);
     await queryRunner.commitTransaction();
     return 'ok';
   } catch (err) {
@@ -92,7 +105,7 @@ const productCartTransaction = async ({
  * @param {object[]} data - {id: number, productList: [{productId: number, color: string, quantity: number, size: number}]}
  * @returns string
  */
-const productCartsTransaction = async ({ id, productList }) => {
+const productCartsTransaction = async ({ id, productList, method }) => {
   const queryRunner = dataSource.createQueryRunner();
   await queryRunner.connect();
   await queryRunner.startTransaction();
@@ -102,11 +115,13 @@ const productCartsTransaction = async ({ id, productList }) => {
     const sizes = productList.map((item) => item.size);
     const productIds = productList.map((item) => item.productId);
     const isDeletedList = productList.map((item) => ({
+      productOptionId: item.productOptionId,
       productId: item.productId,
       size: item.size,
       color: item.color,
       isDeleted: item.isDeleted,
     }));
+    const productOptionIds = productList.map((item) => item.productOptionId);
 
     const colorIdsResult = await queryRunner.query(
       `SELECT id, color FROM colors WHERE color IN (?)`,
@@ -137,6 +152,17 @@ const productCartsTransaction = async ({ id, productList }) => {
         })`;
       })
       .join(', ');
+
+    if (method === 'PATCH' && productOptionIds) {
+      await queryRunner.query(
+        `
+          UPDATE product_carts
+          SET is_deleted = 1
+          WHERE product_option_id IN (?)
+        `,
+        [productOptionIds],
+      );
+    }
 
     const sql = `
     INSERT INTO product_carts (user_id, product_option_id, quantity, is_deleted)
