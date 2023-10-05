@@ -1,22 +1,10 @@
 const { dataSource } = require('./dataSource');
 const { throwError } = require('../utils');
 
-const selector = async (id) => {
-  try {
-    const selectorViewer = await dataSource.query(
-      `SELECT id  FROM products WHERE id = ${id}`,
-    );
-    return selectorViewer;
-  } catch (err) {
-    console.error(err);
-    next(err);
-  }
-};
-
 const introducer = async (id) => {
   try {
     const introducerViewer = await dataSource.query(
-      `SELECT product_name, price, original_price FROM products WHERE id = ${id}`,
+      `SELECT id, product_name, price, original_price FROM products WHERE id = ${id}`,
     );
     return introducerViewer;
   } catch (err) {
@@ -62,22 +50,9 @@ const colorLoader = async (id) => {
   }
 };
 
-const price = async (id) => {
-  try {
-    const priceViewer = await dataSource.query(
-      `SELECT price, original_price FROM products WHERE id = ${id}`,
-    );
-    return priceViewer;
-  } catch (err) {
-    console.error(err);
-    next(err);
-  }
-};
 
 module.exports = {
-  selector,
   introducer,
-  price,
   colorLoader,
   option,
   imageLoader,
