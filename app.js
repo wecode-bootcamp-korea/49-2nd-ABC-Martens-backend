@@ -30,7 +30,6 @@ app.use('/', indexRouter);
 // 회원가입
 app.post('/users', async (req, res) => {
   try {
-    console.log(1);
     const {
       nickname,
       password,
