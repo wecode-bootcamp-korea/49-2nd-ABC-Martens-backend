@@ -7,7 +7,7 @@ CREATE TABLE `product_carts` (
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
   `deleted_at` TIMESTAMP NULL,
-  `is_deleted` tinyint,
+  `is_deleted` integer,
   FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
   FOREIGN KEY (`product_option_id`) REFERENCES `options` (`id`),
   UNIQUE KEY `user_product_option` (`user_id`, `product_option_id`)

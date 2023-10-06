@@ -158,7 +158,7 @@ const allProduct = async (req, res) => {
   }
 };
 
-app.get('/allitem', allProduct);
+app.get('/products', allProduct);
 
 app.use((req, _, next) => {
   const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);

@@ -66,3 +66,5 @@ ABC-Martens는 닥터마틴 서비스의 주요 기능을 직접 구현해보고
 ## Conventions 📝
 
 본 `repository`는 커밋 컨벤션은 유다시티 커밋 컨벤션을 따릅니다.
+
+- 내용 : https://haesoo9410.tistory.com/300
