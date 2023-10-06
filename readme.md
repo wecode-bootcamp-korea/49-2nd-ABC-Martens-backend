@@ -1,80 +1,69 @@
-# how to use
+# ABC-Martens 👞
 
-## 최초 클론시 </br>
+ABC-Martens는 닥터마틴 서비스의 주요 기능을 직접 구현해보고 이해하는 프로젝트입니다.
 
-```bash
-git checkout dev
-```
+## Author 👥
 
-1.  리모트에 기능 브랜치가 없다면 </br>
+<table>
+  <tr>
+    <th>Author</th>
+    <th>Author</th>
+    <th>Author</th>
+    <th>Author</th>
+  </tr>
+  <tr>
+    <td>
+      <img style="border-radius: 50%" width="45" src="https://avatars.githubusercontent.com/u/142577943?v=4"/>
+    </td>
+    <td>
+      <img style="border-radius: 50%" width="45" src="https://avatars.githubusercontent.com/u/132734576?v=4"/>
+    </td>
+    <td>
+      <img style="border-radius: 50%" width="45" src="https://avatars.githubusercontent.com/u/142304129?v=4"/>
+    </td>
+    <td>
+      <img style="border-radius: 50%" width="45" src="https://avatars.githubusercontent.com/u/58713222?v=4"/>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <a href="https://github.com/kimsw94">김승원</a>
+    </td>
+    <td>
+      <a href="https://github.com/Park-KJ">박경재</a>
+    </td>
+    <td>
+      <a href="https://github.com/DeveloperPMYJ">신유진</a>
+    </td>
+    <td>
+      <a href="https://github.com/03290419">이현진</a>
+    </td>
+  </tr>
+</table>
 
-```bash
-git checkout -b feature/기능브랜치
-```
+## features 🚀
 
-2. 리모트에 기능 브랜치가 있다면</br>
+- [회원가입](https://github.com/wecode-bootcamp-korea/49-2nd-ABC-Martens-backend/pull/3) 👤 신유진
+- [로그인](https://github.com/wecode-bootcamp-korea/49-2nd-ABC-Martens-backend/pull/8) 👤 신유진
+  - [비밀번호 찾기](https://github.com/wecode-bootcamp-korea/49-2nd-ABC-Martens-backend/pull/10) 👤 이현진
+- [상품 목록](https://github.com/wecode-bootcamp-korea/49-2nd-ABC-Martens-backend/pull/15) 👤 박경재
+- [상품 상세](https://github.com/wecode-bootcamp-korea/49-2nd-ABC-Martens-backend/pull/7) 👤 김승원
+- [장바구니](https://github.com/wecode-bootcamp-korea/49-2nd-ABC-Martens-backend/pull/11) 👤 이현진
+- [주문](https://github.com/wecode-bootcamp-korea/49-2nd-ABC-Martens-backend/pull/14) 👤 이현진
+- [결제](https://github.com/wecode-bootcamp-korea/49-2nd-ABC-Martens-backend/pull/16) 👤 이현진
+- [외부 API 연동](https://github.com/wecode-bootcamp-korea/49-2nd-ABC-Martens-backend/pull/9) 👤 이현진
+  - 카카오 로그인, 토스 페이먼츠 결제모듈 연결
 
-```bash
-git checkout feature/기능브랜치
-```
+## Skills 🛠️
 
-   </br>
+- `Express.js`
+- `TypeORM`
+- `JWT`
+- `bcrypt`
+- `nodemailer`
+- `lodash`
 
-`npm i` 실행
-`.env` 파일 생성
-
-```yml
-# .env
-TYPEORM_CONNECTION =
-TYPEORM_HOST =
-TYPEORM_USERNAME =
-TYPEORM_PASSWORD =
-TYPEORM_DATABASE =
-TYPEORM_PORT =
-TYPEORM_LOGGING=TRUE
-PORT = 8000
-DATABASE_URL=
-JWT_SECRET=
-```
-
-각각의 키에 해당 하는 값 입력 (단, JWT_SECRET 값은 팀원 모두 같은 값을 적어야 함)
-
-## dev 브랜치 연결 후/DB 스키마에 변경사항이 생겼을 때
-
-1. dbmate 설정 파일을 migration 하여 팀원 모두 동일한 Database 설정을 가지도록 합니다.
-   `.env` 의 `DATABASE_URL=`설정
-
-```yml
-DATABASE_URL="mysql://root:{root 비밀번호 - 설정하지 않았따면 콜론 채로 생략}@127.0.0.1:3306/ABCMartens"
-```
-
-2. mysql cli 에서 `ABCMartens` 로컬 데이터베이스 생성
-
-```bash
-CREATE DATABASE ABCMartens DEFAULT CHARACTER SET utf8mb4 DEFAULT COLLATE utf8mb4_general_ci
-```
-
-`작업 폴더의 root 위치에서 아래 커맨드를 실행`
-
-```bash
-dbmate migrate
-```
-
-## dev 브랜치 연결 후 dev 브랜치에 변경사항이 생겼을 때
-
-dev 브랜치에 변경사항이 있을 때마다 자신의 `feature/~` 브렌치에서
-
-```bash
-git pull origin dev
-```
-
-로 브랜치의 버전을 업데이트
-
-## 개인의 feature 브랜치 머지
-
-`feature/~` 브랜치는 해당하는 기능이 개발완료 된 후(MVP 개발) `dev` 브랜치에 머지하고 슬랙에 리뷰 확인 요청을 전파합니다.
-
-## Conventions
+## Conventions 📝
 
 본 `repository`는 커밋 컨벤션은 유다시티 커밋 컨벤션을 따릅니다.
 
