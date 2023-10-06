@@ -22,6 +22,7 @@ const {
 const {
   productSortService,
   categoryCheckService,
+  totalAmountService,
 } = require('./allProductService');
 
 module.exports = {
@@ -41,6 +42,7 @@ module.exports = {
   allProductService: {
     productSortService,
     categoryCheckService,
+    totalAmountService,
   },
   productService: {
     productReader,

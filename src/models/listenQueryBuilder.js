@@ -5,20 +5,18 @@
 // review: 상품평많은순
 // sale: 판매량순(구매 완료 상태 중 구매 아이템의 구매 수량순)
 
-const sortQueryBuilder = async (sub_category_id, category_id, sortBy) => {
+const sortQueryBuilder = async (sub_category_id, category_id, sort_by) => {
   try {
     const orderingSortWhereBuilder = {
-      // ranking: `WHERE sub_category_id = ${sub_category_id} GROUP BY products.id`,
       ranking: `WHERE sub_category_id = ${sub_category_id} GROUP BY products.id, options.color_id, op.optionCheck`,
       regist: `WHERE sub_category_id = ${sub_category_id} GROUP BY products.id, options.color_id, op.optionCheck`,
       low_price: `WHERE sub_category_id = ${sub_category_id} GROUP BY products.id, options.color_id, op.optionCheck`,
       high_price: `WHERE sub_category_id = ${sub_category_id} GROUP BY products.id, options.color_id, op.optionCheck`,
       review: `WHERE sub_category_id = ${sub_category_id} GROUP BY products.id, options.color_id, op.optionCheck`,
       sale: `WHERE sub_category_id = ${sub_category_id} GROUP BY products.id, options.color_id, op.optionCheck`,
-      '': '',
     };
 
-    if (!sub_category_id) {
+    if (sub_category_id == 'null') {
       orderingSortWhereBuilder.ranking = `WHERE category_id = ${category_id} GROUP BY products.id, options.color_id, op.optionCheck`;
       orderingSortWhereBuilder.regist = `WHERE category_id = ${category_id} GROUP BY products.id, options.color_id, op.optionCheck`;
       orderingSortWhereBuilder.low_price = `WHERE category_id = ${category_id} GROUP BY products.id, options.color_id, op.optionCheck`;
@@ -27,7 +25,7 @@ const sortQueryBuilder = async (sub_category_id, category_id, sortBy) => {
       orderingSortWhereBuilder.sale = `WHERE category_id = ${category_id} GROUP BY products.id, options.color_id, op.optionCheck`;
     }
 
-    const orderingSortWhere = await orderingSortWhereBuilder[sortBy];
+    const orderingSortWhere = await orderingSortWhereBuilder[sort_by];
 
     const orderingSortOrderByBuilder = {
       ranking: 'ORDER BY rating DESC, products.id',
@@ -36,21 +34,17 @@ const sortQueryBuilder = async (sub_category_id, category_id, sortBy) => {
       high_price: 'ORDER BY price DESC, products.id',
       review: 'ORDER BY review DESC, products.id',
       sale: 'ORDER BY total_sales DESC, products.id',
-      '': '',
     };
 
-    const orderingSortOrderBy = await orderingSortOrderByBuilder[sortBy];
+    const orderingSortOrderBy = await orderingSortOrderByBuilder[sort_by];
 
     const productSort = {
-      // ranking: `, ROUND(AVG(rate), 1) AS rating, MAX(product_images.thumbnail_image_url) AS productThumbnail
-      // FROM products
-      // LEFT JOIN reviews ON products.id = reviews.product_id
-      // LEFT JOIN product_images ON products.id = product_images.product_id ${orderingSortWhere} ${orderingSortOrderBy}`,
-      ranking: `, ROUND(AVG(rate), 1) AS rating, MAX(product_images.thumbnail_image_url) AS productThumbnail, options.color_id AS optionId, op.optionCheck
+      ranking: `, ROUND(AVG(rate), 1) AS rating, MAX(product_images.thumbnail_image_url) AS productThumbnail, options.color_id AS optionId, colors.color, op.optionCheck
       FROM products
       LEFT JOIN reviews ON products.id = reviews.product_id
       LEFT JOIN product_images ON products.id = product_images.product_id
       LEFT JOIN options ON products.id = options.product_id
+      LEFT JOIN colors ON options.color_id = colors.id
       LEFT JOIN (SELECT product_id, color_id, colors.color AS color,
       JSON_ARRAYAGG(
       JSON_OBJECT('size', options.size,
@@ -59,13 +53,11 @@ const sortQueryBuilder = async (sub_category_id, category_id, sortBy) => {
       FROM options
       LEFT JOIN colors ON options.color_id = colors.id
       GROUP BY product_id, color_id, colors.color) AS op ON products.id = op.product_id ${orderingSortWhere} ${orderingSortOrderBy}`,
-      // regist: `, MAX(product_images.thumbnail_image_url) AS productThumbnail
-      // FROM products
-      // LEFT JOIN product_images ON products.id = product_images.product_id ${orderingSortWhere} ${orderingSortOrderBy}`,
-      regist: `, MAX(product_images.thumbnail_image_url) AS productThumbnail, options.color_id AS optionId, op.optionCheck
+      regist: `, MAX(product_images.thumbnail_image_url) AS productThumbnail, options.color_id AS optionId, colors.color, op.optionCheck
       FROM products
       LEFT JOIN product_images ON products.id = product_images.product_id
       LEFT JOIN options ON products.id = options.product_id
+      LEFT JOIN colors ON options.color_id = colors.id
       LEFT JOIN (SELECT product_id, color_id, colors.color AS color,
       JSON_ARRAYAGG(
       JSON_OBJECT('size', options.size,
@@ -74,16 +66,11 @@ const sortQueryBuilder = async (sub_category_id, category_id, sortBy) => {
       FROM options
       LEFT JOIN colors ON options.color_id = colors.id
       GROUP BY product_id, color_id, colors.color) AS op ON products.id = op.product_id ${orderingSortWhere} ${orderingSortOrderBy}`,
-      // low_price: `, MAX(product_images.thumbnail_image_url) AS productThumbnail
-      // FROM products
-      // LEFT JOIN product_images ON products.id = product_images.product_id ${orderingSortWhere} ${orderingSortOrderBy}`,
-      // high_price: `, MAX(product_images.thumbnail_image_url) AS productThumbnail
-      // FROM products
-      // LEFT JOIN product_images ON products.id = product_images.product_id ${orderingSortWhere} ${orderingSortOrderBy}`,
-      low_price: `, MAX(product_images.thumbnail_image_url) AS productThumbnail, options.color_id AS optionId, op.optionCheck
+      low_price: `, MAX(product_images.thumbnail_image_url) AS productThumbnail, options.color_id AS optionId, colors.color, op.optionCheck
       FROM products
       LEFT JOIN product_images ON products.id = product_images.product_id 
       LEFT JOIN options ON products.id = options.product_id
+      LEFT JOIN colors ON options.color_id = colors.id
       LEFT JOIN (SELECT product_id, color_id, colors.color AS color,
       JSON_ARRAYAGG(
       JSON_OBJECT('size', options.size,
@@ -92,10 +79,11 @@ const sortQueryBuilder = async (sub_category_id, category_id, sortBy) => {
       FROM options
       LEFT JOIN colors ON options.color_id = colors.id
       GROUP BY product_id, color_id, colors.color) AS op ON products.id = op.product_id ${orderingSortWhere} ${orderingSortOrderBy}`,
-      high_price: `, MAX(product_images.thumbnail_image_url) AS productThumbnail, options.color_id AS optionId, op.optionCheck
+      high_price: `, MAX(product_images.thumbnail_image_url) AS productThumbnail, options.color_id AS optionId, colors.color, op.optionCheck
       FROM products
       LEFT JOIN product_images ON products.id = product_images.product_id 
       LEFT JOIN options ON products.id = options.product_id
+      LEFT JOIN colors ON options.color_id = colors.id
       LEFT JOIN (SELECT product_id, color_id, colors.color AS color,
       JSON_ARRAYAGG(
       JSON_OBJECT('size', options.size,
@@ -104,15 +92,12 @@ const sortQueryBuilder = async (sub_category_id, category_id, sortBy) => {
       FROM options
       LEFT JOIN colors ON options.color_id = colors.id
       GROUP BY product_id, color_id, colors.color) AS op ON products.id = op.product_id ${orderingSortWhere} ${orderingSortOrderBy}`,
-      // review: `, COUNT(content) AS review, MAX(product_images.thumbnail_image_url) AS productThumbnail
-      // FROM products
-      // LEFT JOIN reviews ON products.id = reviews.product_id
-      // LEFT JOIN product_images ON products.id = product_images.product_id ${orderingSortWhere} ${orderingSortOrderBy}`,
-      review: `, COUNT(content) AS review, MAX(product_images.thumbnail_image_url) AS productThumbnail, options.color_id AS optionId, op.optionCheck
+      review: `, COUNT(content) AS review, MAX(product_images.thumbnail_image_url) AS productThumbnail, options.color_id AS optionId, colors.color, op.optionCheck
       FROM products
       LEFT JOIN reviews ON products.id = reviews.product_id
       LEFT JOIN product_images ON products.id = product_images.product_id 
       LEFT JOIN options ON products.id = options.product_id
+      LEFT JOIN colors ON options.color_id = colors.id
       LEFT JOIN (SELECT product_id, color_id, colors.color AS color,
       JSON_ARRAYAGG(
       JSON_OBJECT('size', options.size,
@@ -121,7 +106,7 @@ const sortQueryBuilder = async (sub_category_id, category_id, sortBy) => {
       FROM options
       LEFT JOIN colors ON options.color_id = colors.id
       GROUP BY product_id, color_id, colors.color) AS op ON products.id = op.product_id ${orderingSortWhere} ${orderingSortOrderBy}`,
-      sale: `, IFNULL(amount_sales, 0) AS total_sales, MAX(product_images.thumbnail_image_url) AS productThumbnail, options.color_id AS optionId, op.optionCheck
+      sale: `, IFNULL(amount_sales, 0) AS total_sales, MAX(product_images.thumbnail_image_url) AS productThumbnail, options.color_id AS optionId, colors.color, op.optionCheck
       FROM products
       LEFT JOIN (SELECT po.product_option_id, SUM(po.product_quantity) AS amount_sales
       FROM product_orders AS po
@@ -130,6 +115,7 @@ const sortQueryBuilder = async (sub_category_id, category_id, sortBy) => {
       GROUP BY po.product_option_id) AS po_result ON products.id = po_result.product_option_id
       LEFT JOIN product_images ON products.id = product_images.product_id
       LEFT JOIN options ON products.id = options.product_id
+      LEFT jOIN colors ON options.color_id = colors.id
       LEFT JOIN (SELECT product_id, color_id, colors.color AS color,
       JSON_ARRAYAGG(
       JSON_OBJECT('size', options.size,
@@ -140,10 +126,9 @@ const sortQueryBuilder = async (sub_category_id, category_id, sortBy) => {
       GROUP BY product_id, color_id, colors.color) AS op ON products.id = op.product_id 
       ${orderingSortWhere}
       ${orderingSortOrderBy}`,
-      '': '',
     };
 
-    return await productSort[sortBy];
+    return await productSort[sort_by];
   } catch (err) {
     console.log(err);
   }
@@ -151,7 +136,7 @@ const sortQueryBuilder = async (sub_category_id, category_id, sortBy) => {
 
 const pageQueryBuilder = async (page) => {
   try {
-    const pagination = `LIMIT 3 OFFSET ${(parseInt(page, 10) - 1) * 3}`;
+    const pagination = `LIMIT 12 OFFSET ${(parseInt(page, 10) - 1) * 12}`;
     return pagination;
   } catch (err) {
     console.log(err);
