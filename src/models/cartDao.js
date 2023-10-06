@@ -132,7 +132,6 @@ const deleteProductCartsTransaction = async ({ productList }) => {
       `SELECT is_deleted AS isDeleted, id AS cartId FROM product_carts WHERE product_option_id IN (?)`,
       [optionIdsResult.map((item) => item.id)],
     );
-    console.log(isDeletedProductExist);
     const undeletedData = isDeletedProductExist.filter(
       (item) => !item.isDeleted,
     );
@@ -162,7 +161,6 @@ const deleteProductCartsTransaction = async ({ productList }) => {
         [undeletedData.map((item) => item.cartId)],
       );
     }
-    console.log(undeletedData.map((item) => item.cartId));
     await queryRunner.commitTransaction();
     return 'ok';
   } catch (err) {

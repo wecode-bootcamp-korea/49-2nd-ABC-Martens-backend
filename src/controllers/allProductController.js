@@ -2,7 +2,6 @@ const { allProductService } = require('../services');
 const { productSortService, categoryCheckService } = allProductService;
 
 const allProduct = async (req, res) => {
-  console.log(req.query);
   try {
     const { category_id, sub_category_id, sortBy, page } = req.query; //  에러 핸들링 ----------------------------------------
 

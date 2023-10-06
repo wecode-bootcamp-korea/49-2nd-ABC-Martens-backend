@@ -16,7 +16,6 @@ const addProductCartsService = (data) => {
 };
 
 const addProductCartService = (data) => {
-  console.log(data);
   return productCartTransaction(data);
 };
 
