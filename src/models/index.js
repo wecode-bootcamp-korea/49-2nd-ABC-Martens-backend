@@ -1,3 +1,5 @@
+const { dataSource } = require('./dataSource');
+
 const {
   getUserIdByEmailDao,
   createUserDao,
@@ -67,4 +69,5 @@ module.exports = {
     productOrdersTransaction,
     orderCheckoutDao,
   },
+  dataSource,
 };
