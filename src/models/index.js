@@ -10,6 +10,8 @@ const {
   getProductByUserIdDao,
   productCartTransaction,
   productCartsTransaction,
+  deleteProductCartTransaction,
+  deleteProductCartsTransaction,
 } = require('./cartDao');
 const {
   getOrderAddressByUserId,
@@ -18,6 +20,14 @@ const {
   productOrdersTransaction,
   orderCheckoutDao,
 } = require('./orderDao');
+// const { productSortDao, categoryCheckDao } = require('./allProductDao');
+// const { sortQueryBuilder, pageQueryBuilder } = require('./listenQueryBuilder');
+const {
+  productSortDao,
+  categoryCheckDao,
+  totalAmountDao,
+} = require('./allProductDao');
+const { sortQueryBuilder, pageQueryBuilder } = require('./listenQueryBuilder');
 
 const productDao = require('./productDao');
 const selector = productDao.selector;
@@ -26,13 +36,6 @@ const price = productDao.price;
 const colorLoader = productDao.colorLoader;
 const option = productDao.option;
 const imageLoader = productDao.imageLoader;
-
-const {
-  productSortDao,
-  categoryCheckDao,
-  totalAmountDao,
-} = require('./allProductDao');
-const { sortQueryBuilder, pageQueryBuilder } = require('./listenQueryBuilder');
 
 module.exports = {
   userDao: {
@@ -45,6 +48,8 @@ module.exports = {
     getProductByUserIdDao,
     productCartTransaction,
     productCartsTransaction,
+    deleteProductCartTransaction,
+    deleteProductCartsTransaction,
   },
   allProductDao: {
     productSortDao,

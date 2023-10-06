@@ -1,23 +1,32 @@
 const { dataSource } = require('./dataSource');
+const { throwError } = require('../utils');
 
-const selector = async (id) => {
+const productSaved = async (id) => {
+  const productCheck = await dataSource.query(
+    `SELECT id FROM products WHERE id = ${id}`
+  );
+  console.log(productCheck)
+  return productCheck;
+}
+
+const introducer = async (id) => {
   try {
-    const selectorViewer = await dataSource.query(
-      `SELECT id  FROM products WHERE id = ${id}`,
+    const introducerViewer = await dataSource.query(
+      `SELECT id, product_name, price, original_price, products_description FROM products WHERE id = ${id}`,
     );
-    return selectorViewer;
+    return introducerViewer;
   } catch (err) {
     console.error(err);
     next(err);
   }
 };
 
-const introducer = async (id) => {
+const detailImageLoader = async (id) => {
   try {
-    const introducerViewer = await dataSource.query(
-      `SELECT product_name, price, original_price FROM products WHERE id = ${id}`,
+    const detailImageViewer = await dataSource.query(
+      `SELECT detail_image_url FROM product_images WHERE product_id = ${id}`,
     );
-    return introducerViewer;
+    return detailImageViewer;
   } catch (err) {
     console.error(err);
     next(err);
@@ -27,7 +36,7 @@ const introducer = async (id) => {
 const imageLoader = async (id) => {
   try {
     const imageViewer = await dataSource.query(
-      `SELECT detail_image_url, thumbnail_image_url, is_thumbnail FROM product_images WHERE product_id = ${id}`,
+      `SELECT thumbnail_image_url, is_thumbnail FROM product_images WHERE product_id = ${id}`,
     );
     return imageViewer;
   } catch (err) {
@@ -39,7 +48,8 @@ const imageLoader = async (id) => {
 const option = async (id) => {
   try {
     const optionViewer = await dataSource.query(
-      `SELECT product_id, color_id, quantity, size FROM options WHERE product_id = ${id}`,
+      `SELECT color_id, quantity, size, colors.color AS colorName FROM options
+      LEFT JOIN colors ON options.color_id = colors.id WHERE product_id = ${id}`,
     );
     return optionViewer;
   } catch (err) {
@@ -48,11 +58,11 @@ const option = async (id) => {
   }
 };
 
-const colorLoader = async (id) => {
+const colors = async (id) => {
   try {
-    const color_id = optionSelector.color_id; //색상만을 불러옵니다.
     const colorViewer = await dataSource.query(
-      `SELECT color FROM colors WHERE color_id = ${color_id}`,
+      `SELECT DISTINCT color_id, colors.color AS colorName FROM options
+      LEFT JOIN colors ON options.color_id = colors.id WHERE product_id = ${id}`,
     );
     return colorViewer;
   } catch (err) {
@@ -61,23 +71,12 @@ const colorLoader = async (id) => {
   }
 };
 
-const price = async (id) => {
-  try {
-    const priceViewer = await dataSource.query(
-      `SELECT price, original_price FROM products WHERE id = ${id}`,
-    );
-    return priceViewer;
-  } catch (err) {
-    console.error(err);
-    next(err);
-  }
-};
 
 module.exports = {
-  selector,
   introducer,
-  price,
-  colorLoader,
   option,
+  colors,
+  detailImageLoader,
   imageLoader,
+  productSaved
 };
