@@ -146,7 +146,6 @@ app.post('/login', async (req, res) => {
 
     // 해당 email의 해쉬된 패스워드가 DB에 있는가
     const hashPw = await bcrypt.compare(password, existingUser[0].password);
-    console.log(hashPw);
 
     if (!hashPw) {
       const error = new Error('일치하는 회원정보가 없습니다');

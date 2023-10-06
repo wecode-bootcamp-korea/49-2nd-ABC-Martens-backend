@@ -3,11 +3,10 @@ const { throwError } = require('../utils');
 
 const productSaved = async (id) => {
   const productCheck = await dataSource.query(
-    `SELECT id FROM products WHERE id = ${id}`
+    `SELECT id FROM products WHERE id = ${id}`,
   );
-  console.log(productCheck)
   return productCheck;
-}
+};
 
 const introducer = async (id) => {
   try {
@@ -71,12 +70,11 @@ const colors = async (id) => {
   }
 };
 
-
 module.exports = {
   introducer,
   option,
   colors,
   detailImageLoader,
   imageLoader,
-  productSaved
+  productSaved,
 };
