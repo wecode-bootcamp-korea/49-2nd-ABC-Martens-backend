@@ -89,10 +89,6 @@ app.use((err, _, res, next) => {
   });
 });
 
-app.listen(
-  app.get('port'),
-  process.env.NODE === 'production' ? '0.0.0.0' : 'localhost',
-  () => {
-    console.log(`server is running`);
-  },
-);
+app.listen(app.get('port'), () => {
+  console.log(`server is running`);
+});

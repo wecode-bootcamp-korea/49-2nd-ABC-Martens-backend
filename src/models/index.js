@@ -8,6 +8,8 @@ const {
   getProductByUserIdDao,
   productCartTransaction,
   productCartsTransaction,
+  deleteProductCartTransaction,
+  deleteProductCartsTransaction,
 } = require('./cartDao');
 const {
   getOrderAddressByUserId,
@@ -39,6 +41,8 @@ module.exports = {
     getProductByUserIdDao,
     productCartTransaction,
     productCartsTransaction,
+    deleteProductCartTransaction,
+    deleteProductCartsTransaction,
   },
   allProductDao: {
     productSortDao,
