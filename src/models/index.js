@@ -27,7 +27,11 @@ const colorLoader = productDao.colorLoader;
 const option = productDao.option;
 const imageLoader = productDao.imageLoader;
 
-const { productSortDao, categoryCheckDao } = require('./allProductDao');
+const {
+  productSortDao,
+  categoryCheckDao,
+  totalAmountDao,
+} = require('./allProductDao');
 const { sortQueryBuilder, pageQueryBuilder } = require('./listenQueryBuilder');
 
 module.exports = {
@@ -45,6 +49,7 @@ module.exports = {
   allProductDao: {
     productSortDao,
     categoryCheckDao,
+    totalAmountDao,
   },
   listenQueryBuilder: {
     sortQueryBuilder,
