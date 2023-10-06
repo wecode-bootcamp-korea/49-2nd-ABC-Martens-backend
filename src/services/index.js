@@ -8,6 +8,8 @@ const {
   getCartProductByUserIdService,
   addProductCartService,
   addProductCartsService,
+  updateProductCartService,
+  updateProductCartsService,
 } = require('./cartService');
 const { productReader } = require('./productService');
 const {
@@ -34,6 +36,8 @@ module.exports = {
     getCartProductByUserIdService,
     addProductCartService,
     addProductCartsService,
+    updateProductCartService,
+    updateProductCartsService,
   },
   allProductService: {
     productSortService,

@@ -32,6 +32,7 @@ INSERT INTO users (email, birth_date, gender, is_checked_marketing, password, ni
 
 -- INSERT INTO colors (id, color) VALUES (1, 'black');
 
+
 INSERT INTO options (id, product_id, color_id, quantity, size) VALUES (1, 1, 1, 100, 220)
 , (2, 1, 1, 100, 230)
 , (3, 1, 1, 100, 240)
@@ -115,3 +116,24 @@ INSERT INTO options (id, product_id, color_id, quantity, size) VALUES (1, 1, 1, 
 
 -- migrate:down
 
+
+
+INSERT INTO product_carts (user_id, product_option_id, quantity) VALUES 
+(1,2,10),
+(1,3,10),
+(1,4,10),
+(1,5,10),
+(1,11,10),
+(1,13,10),
+(1,14,10),
+(1,21,10),
+(1,23,10),
+(1,25,10),
+(1,29,10),
+(1,30,10),
+(1,35,10),
+(1,40,10),
+(1,77,10),
+(1,55,10),
+(1,66,10),
+(1,80,10),

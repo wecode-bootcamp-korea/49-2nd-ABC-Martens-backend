@@ -1,3 +1,4 @@
+const { isEmpty } = require('lodash');
 const { throwError } = require('../utils');
 const { dataSource } = require('./dataSource');
 
@@ -16,7 +17,8 @@ const getProductByUserIdDao = async (id) => {
       options.size,
       colors.color,
       product_carts.quantity, 
-      product_carts.product_option_id AS productOptionId
+      product_carts.product_option_id AS productOptionId,
+      product_carts.id AS cartId
     FROM 
       products
     LEFT JOIN
@@ -28,7 +30,7 @@ const getProductByUserIdDao = async (id) => {
     LEFT JOIN 
       product_carts ON options.id = product_carts.product_option_id  
     LEFT JOIN users ON product_carts.user_id = users.id
-    WHERE users.id = ? AND (product_carts.is_deleted IS NULL OR product_carts.is_deleted != 1)
+    WHERE users.id = ? AND (product_carts.is_deleted IS NULL OR product_carts.is_deleted = 0)
     ORDER BY product_carts.updated_at ASC
           `,
     [id],
@@ -37,16 +39,144 @@ const getProductByUserIdDao = async (id) => {
 };
 
 const addProductToCartQuery = `
-    quantity = VALUES(quantity) + product_carts.quantity,
+    quantity = VALUES(quantity) + product_carts.quantity
   `;
 
 const updateProductInCartQuery = `
     quantity = VALUES(quantity),
+    is_deleted = VALUES(is_deleted);    
 `;
 
 /**
- * @function productCartTransaction - 장바구니에 단일 상품 추가/수정시 발생하는 트랜잭션 함수
+ * @function deleteProductCartTransaction - 장바구니에 단일 상품 삭제시  발생하는 트랜잭션 함수
  * @param {object} data - {id: number, productId: number, color: string, quantity: number, size: number}
+ * @returns string
+ */
+const deleteProductCartTransaction = async ({ productId, size, color }) => {
+  const queryRunner = dataSource.createQueryRunner();
+  await queryRunner.connect();
+  await queryRunner.startTransaction();
+
+  try {
+    const [colorId] = await queryRunner.query(
+      `SELECT id FROM colors WHERE color = ?`,
+      [color],
+    );
+    const [optionId] = await queryRunner.query(
+      `SELECT id FROM options WHERE product_id = ? AND color_id = ? AND size = ?`,
+      [productId, colorId.id, parseInt(size)],
+    );
+    const isDeletedProductExist = await queryRunner.query(
+      `SELECT is_deleted AS isDeleted,id AS cartId FROM product_carts WHERE product_option_id = ?`,
+      [optionId.id],
+    );
+
+    if (!isEmpty(isDeletedProductExist)) {
+      await queryRunner.query(
+        `UPDATE product_carts
+        SET is_deleted = is_deleted + 1
+        WHERE product_option_id = ?;
+        `,
+        [optionId.id],
+      );
+      const [DeleteTargetArr] = isDeletedProductExist.filter(
+        (item) => !item.isDeleted,
+      );
+      if (!isEmpty(DeleteTargetArr)) {
+        const sql = `
+        UPDATE product_carts SET is_deleted = 1 
+        WHERE id = ?
+      `;
+        await queryRunner.query(sql, [DeleteTargetArr.cartId]);
+      }
+    } else {
+      const sql = `
+      UPDATE product_carts SET is_deleted = 1 
+      WHERE id = ?
+    `;
+      await queryRunner.query(sql, [optionId.id]);
+    }
+    await queryRunner.commitTransaction();
+    return 'ok';
+  } catch (err) {
+    console.error(err);
+    await queryRunner.rollbackTransaction();
+    throwError(500, 'transaction failed');
+  } finally {
+    await queryRunner.release();
+  }
+};
+/**
+ * @function deleteProductCartsTransaction - 장바구니에서 여러 상품 삭제시 발생하는 트랜잭션 함수
+ * @param {object[]} data - {id: number, productList: [{productId: number, color: string, quantity: number, size: number}]}
+ * @returns string
+ */
+const deleteProductCartsTransaction = async ({ productList }) => {
+  const queryRunner = dataSource.createQueryRunner();
+  await queryRunner.connect();
+  await queryRunner.startTransaction();
+
+  try {
+    const colors = productList.map((item) => item.color);
+    const sizes = productList.map((item) => item.size);
+    const productIds = productList.map((item) => item.productId);
+    const colorIdsResult = await queryRunner.query(
+      `SELECT id, color FROM colors WHERE color IN (?)`,
+      [colors],
+    );
+    const optionIdsResult = await queryRunner.query(
+      `SELECT id, product_id, color_id, size  FROM options WHERE product_id IN (?) AND color_id IN (?) AND size IN (?)`,
+      [productIds, colorIdsResult.map((color) => color.id), sizes],
+    );
+    const isDeletedProductExist = await queryRunner.query(
+      `SELECT is_deleted AS isDeleted, id AS cartId FROM product_carts WHERE product_option_id IN (?)`,
+      [optionIdsResult.map((item) => item.id)],
+    );
+    console.log(isDeletedProductExist);
+    const undeletedData = isDeletedProductExist.filter(
+      (item) => !item.isDeleted,
+    );
+    const deletedData = isDeletedProductExist.filter((item) => item.isDeleted);
+    if (!isEmpty(deletedData)) {
+      await queryRunner.query(
+        `UPDATE product_carts
+         SET is_deleted = is_deleted + 1
+         WHERE product_option_id IN (?);`,
+        [optionIdsResult.map((item) => item.id)],
+      );
+    } else {
+      await queryRunner.query(
+        `UPDATE product_carts
+         SET is_deleted = 1
+         WHERE product_option_id IN (?);`,
+        [optionIdsResult.map((item) => item.id)],
+      );
+    }
+    if (undeletedData) {
+      await queryRunner.query(
+        `
+          UPDATE product_carts
+          SET is_deleted = 1
+          WHERE id IN (?)
+        `,
+        [undeletedData.map((item) => item.cartId)],
+      );
+    }
+    console.log(undeletedData.map((item) => item.cartId));
+    await queryRunner.commitTransaction();
+    return 'ok';
+  } catch (err) {
+    console.error(err);
+    await queryRunner.rollbackTransaction();
+    throwError(500, 'transaction failed');
+  } finally {
+    await queryRunner.release();
+  }
+};
+
+/**
+ * @function productCartTransaction - 장바구니에 단일 상품 추가/수정시 발생하는 트랜잭션 함수
+ * @param {object} data - {id: number, productId: number, color: string, quantity: number, size: number, method: string}
  * @returns string
  */
 const productCartTransaction = async ({
@@ -84,11 +214,14 @@ const productCartTransaction = async ({
     INSERT INTO product_carts (user_id, product_option_id, quantity, is_deleted, deleted_at)
     VALUES (?, ?, ?, ?, ${isDeleted === 'Y' ? 'CURRENT_TIMESTAMP' : null})
     ON DUPLICATE KEY UPDATE 
-      ${method === 'POST' ? addProductToCartQuery : updateProductInCartQuery},
-      is_deleted = VALUES(is_deleted);    
+      ${method === 'POST' ? addProductToCartQuery : updateProductInCartQuery}
     `;
-
-    await queryRunner.query(sql, [id, optionId.id, quantity, isDeleted]);
+    await queryRunner.query(sql, [
+      id,
+      optionId.id,
+      quantity,
+      isDeleted === 'Y' ? 1 : 0,
+    ]);
     await queryRunner.commitTransaction();
     return 'ok';
   } catch (err) {
@@ -188,4 +321,6 @@ module.exports = {
   getProductByUserIdDao,
   productCartTransaction,
   productCartsTransaction,
+  deleteProductCartTransaction,
+  deleteProductCartsTransaction,
 };

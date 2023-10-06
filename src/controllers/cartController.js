@@ -5,6 +5,8 @@ const {
   getCartProductByUserIdService,
   addProductCartService,
   addProductCartsService,
+  updateProductCartService,
+  updateProductCartsService,
 } = cartService;
 
 const getCartProductByUserIdController = async (req, res, next) => {
@@ -31,14 +33,26 @@ const addProductCartController = async (req, res, next) => {
     const { color, quantity, size } = req.body;
     if (!productId || !color || !quantity || !size)
       throwError(400, 'key error');
-    const message = await addProductCartService({
-      id,
-      productId,
-      ...req.body,
-      method,
-    });
-    if (message === 'ok') {
-      return res.status(201).json({ message: 'product added' });
+    if (method === 'POST') {
+      const message = await addProductCartService({
+        id,
+        productId,
+        ...req.body,
+        method,
+      });
+      if (message === 'ok') {
+        return res.status(201).json({ message: 'product added' });
+      }
+    } else {
+      const message = await updateProductCartService({
+        id,
+        productId,
+        ...req.body,
+        method,
+      });
+      if (message === 'ok') {
+        return res.status(201).json({ message: 'product updated' });
+      }
     }
   } catch (err) {
     console.error(err);
@@ -55,9 +69,21 @@ const addProductCartsController = async (req, res, next) => {
     const { productId, size, quantity, color } = productList[0];
     if (!productId || !size || !quantity || !color)
       throwError(400, 'key error');
-    const message = await addProductCartsService({ id, ...req.body, method });
-    if (message === 'ok') {
-      return res.status(201).json({ message: 'product added' });
+
+    if (method === 'POST') {
+      const message = await addProductCartsService({ id, ...req.body, method });
+      if (message === 'ok') {
+        return res.status(201).json({ message: 'product added' });
+      }
+    } else {
+      const message = await updateProductCartsService({
+        id,
+        ...req.body,
+        method,
+      });
+      if (message === 'ok') {
+        return res.status(201).json({ message: 'product updated' });
+      }
     }
   } catch (err) {
     console.error(err);
@@ -69,4 +95,5 @@ module.exports = {
   getCartProductByUserIdController,
   addProductCartController,
   addProductCartsController,
+  updateProductCartService,
 };

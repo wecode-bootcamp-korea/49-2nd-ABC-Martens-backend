@@ -182,9 +182,7 @@ app.use((err, _, res, next) => {
   });
 });
 
-app.listen(
-  app.get('port'),
-  () => {
-    console.log(`server is running`);
-  },
-);
+app.listen(app.get('port'), () => {
+  console.log(`server is running`);
+});
+
