@@ -20,6 +20,8 @@ const {
   productOrdersTransaction,
   orderCheckoutDao,
 } = require('./orderDao');
+const { productSortDao, categoryCheckDao } = require('./allProductDao');
+const { sortQueryBuilder, pageQueryBuilder } = require('./listenQueryBuilder');
 
 const productDao = require('./productDao');
 const selector = productDao.selector;
@@ -28,9 +30,6 @@ const price = productDao.price;
 const colorLoader = productDao.colorLoader;
 const option = productDao.option;
 const imageLoader = productDao.imageLoader;
-
-const { productSortDao, categoryCheckDao } = require('./allProductDao');
-const { sortQueryBuilder, pageQueryBuilder } = require('./listenQueryBuilder');
 
 module.exports = {
   userDao: {

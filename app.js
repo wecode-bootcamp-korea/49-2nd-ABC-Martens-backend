@@ -1,6 +1,4 @@
 const express = require('express');
-const https = require('https');
-const fs = require('fs');
 const v4 = require('uuid4');
 const morgan = require('morgan');
 const cors = require('cors');
@@ -17,7 +15,7 @@ app.set('port', process.env.PORT || 8000);
 app.use(
   cors({
     origin: '*',
-    credentials: true
+    credentials: true,
   }),
 );
 app.use(morgan('dev'));
@@ -41,7 +39,7 @@ app.post('/users', async (req, res) => {
       phoneNumber,
       gender,
       profileImage = '',
-      provider, 
+      provider,
     } = req.body;
 
     console.log(req.body);
@@ -182,7 +180,10 @@ app.use((err, _, res, next) => {
   });
 });
 
-app.listen(app.get('port'), () => {
-  console.log(`server is running`);
-});
-
+app.listen(
+  app.get('port'),
+  process.env.NODE === 'production' ? '0.0.0.0' : '127.0.0.1',
+  () => {
+    console.log(`server is running`);
+  },
+);
