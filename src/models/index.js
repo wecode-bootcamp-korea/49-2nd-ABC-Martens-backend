@@ -20,7 +20,13 @@ const {
   productOrdersTransaction,
   orderCheckoutDao,
 } = require('./orderDao');
-const { productSortDao, categoryCheckDao } = require('./allProductDao');
+// const { productSortDao, categoryCheckDao } = require('./allProductDao');
+// const { sortQueryBuilder, pageQueryBuilder } = require('./listenQueryBuilder');
+const {
+  productSortDao,
+  categoryCheckDao,
+  totalAmountDao,
+} = require('./allProductDao');
 const { sortQueryBuilder, pageQueryBuilder } = require('./listenQueryBuilder');
 
 const productDao = require('./productDao');
@@ -48,6 +54,7 @@ module.exports = {
   allProductDao: {
     productSortDao,
     categoryCheckDao,
+    totalAmountDao,
   },
   listenQueryBuilder: {
     sortQueryBuilder,

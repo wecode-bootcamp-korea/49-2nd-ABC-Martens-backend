@@ -14,7 +14,7 @@ const productSortDao = async (sortQueryBuilder, pageQueryBuilder) => {
 const categoryCheckDao = async (sub_category_id, category_id) => {
   let categoryCheck;
   try {
-    if (!sub_category_id) {
+    if (!sub_category_id || sub_category_id == 'null') {
       categoryCheck = await dataSource.query(
         `SELECT * FROM sub_categories WHERE parent_id = ${category_id}`,
       );
@@ -29,7 +29,19 @@ const categoryCheckDao = async (sub_category_id, category_id) => {
   return categoryCheck;
 };
 
+const totalAmountDao = async (category_id) => {
+  try {
+    const result = await dataSource.query(
+      `SELECT COUNT(id) AS total_amount FROM products WHERE category_id = "${category_id}" GROUP BY category_id`,
+    );
+    return result;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 module.exports = {
   productSortDao,
   categoryCheckDao,
+  totalAmountDao,
 };
